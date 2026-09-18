@@ -167,8 +167,10 @@ export function ApparelSolutions() {
             Наши работы по вышивке спецодежды
           </h2>
 
-          <p className="mt-3 max-w-[540px] text-[14px] leading-relaxed text-muted sm:text-[16px]">
-            Фильтруйте по типу изделия и откройте серию — все кадры сразу.
+          <p className="mt-3 max-w-[580px] text-[14px] leading-relaxed text-muted sm:text-[16px]">
+            Шьём любые спецодежды под ваш запрос — куртки, жилеты, комплекты и
+            другие изделия. Любые дизайны, вышивка и шевроны под бренд или
+            задачу. Ниже — примеры наших работ.
           </p>
 
           <a

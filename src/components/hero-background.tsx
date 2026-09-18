@@ -5,23 +5,22 @@ import { asset } from "@/lib/asset";
 
 /** Skip intro frames where the face is not yet visible */
 const START_AT_SECONDS = 1.8;
-/** Soften the last stretch so the freeze does not feel like a glitch */
-const FADE_WINDOW = 1.35;
-/** Hold a clean frame before the last (often broken) frames */
-const FREEZE_BEFORE_END = 0.55;
+/** Restart a bit before the last broken frames for a seamless loop */
+const LOOP_BEFORE_END = 0.35;
 
 export function HeroBackground() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const startedRef = useRef(false);
-  const settlingRef = useRef(false);
 
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
 
-    const prefersReduced =
-      typeof window !== "undefined" &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const play = () => {
+      void video.play().catch(() => {
+        /* autoplay may be blocked until user gesture */
+      });
+    };
 
     const startFromFace = () => {
       if (startedRef.current) return;
@@ -33,80 +32,36 @@ export function HeroBackground() {
         Math.max(0, video.duration - 0.5),
       );
       video.currentTime = startAt;
-
-      const play = () => {
-        void video.play().catch(() => {
-          /* autoplay may be blocked until user gesture */
-        });
-      };
-
-      if (video.readyState >= 2) {
-        play();
-      } else {
-        video.addEventListener("seeked", play, { once: true });
-      }
+      play();
     };
 
-    const settleOnFrame = (freezeAt: number) => {
-      settlingRef.current = true;
-      video.pause();
-      video.playbackRate = 1;
-
-      const applyFreeze = () => {
-        video.style.transition = "opacity 0.7s ease";
-        video.style.opacity = "1";
-      };
-
-      if (Math.abs(video.currentTime - freezeAt) > 0.04) {
-        const onSeeked = () => {
-          video.removeEventListener("seeked", onSeeked);
-          applyFreeze();
-        };
-        video.addEventListener("seeked", onSeeked);
-        video.currentTime = freezeAt;
-      } else {
-        applyFreeze();
-      }
+    const restartLoop = () => {
+      if (!Number.isFinite(video.duration) || video.duration <= 0) return;
+      const startAt = Math.min(
+        START_AT_SECONDS,
+        Math.max(0, video.duration - 0.5),
+      );
+      video.currentTime = startAt;
+      play();
     };
 
     const onTimeUpdate = () => {
-      if (settlingRef.current) return;
       if (!Number.isFinite(video.duration) || video.duration <= 0) return;
-
       const remaining = video.duration - video.currentTime;
-      const freezeAt = Math.max(0, video.duration - FREEZE_BEFORE_END);
-
-      if (remaining <= FREEZE_BEFORE_END) {
-        settleOnFrame(freezeAt);
-        return;
+      if (remaining <= LOOP_BEFORE_END) {
+        restartLoop();
       }
-
-      if (prefersReduced || remaining > FADE_WINDOW) {
-        video.playbackRate = 1;
-        return;
-      }
-
-      const t = 1 - remaining / FADE_WINDOW;
-      const ease = 1 - (1 - t) ** 3;
-      video.playbackRate = Math.max(0.42, 1 - ease * 0.58);
-      video.style.opacity = String(1 - ease * 0.08);
-    };
-
-    const onEnded = () => {
-      if (settlingRef.current) return;
-      const freezeAt = Math.max(0, video.duration - FREEZE_BEFORE_END);
-      settleOnFrame(freezeAt);
     };
 
     video.addEventListener("loadedmetadata", startFromFace);
     video.addEventListener("timeupdate", onTimeUpdate);
-    video.addEventListener("ended", onEnded);
+    video.addEventListener("ended", restartLoop);
     if (video.readyState >= 1) startFromFace();
 
     return () => {
       video.removeEventListener("loadedmetadata", startFromFace);
       video.removeEventListener("timeupdate", onTimeUpdate);
-      video.removeEventListener("ended", onEnded);
+      video.removeEventListener("ended", restartLoop);
     };
   }, []);
 
@@ -120,10 +75,7 @@ export function HeroBackground() {
         preload="auto"
         poster={asset("/images/hero-poster.jpg")}
       >
-        <source
-          src={asset("/desktop.mp4")}
-          type="video/mp4"
-        />
+        <source src={asset("/desktop.mp4")} type="video/mp4" />
       </video>
       <div className="absolute inset-0 bg-black/18" />
       <div className="absolute inset-0 bg-gradient-to-b from-black/35 via-transparent to-black/55 lg:hidden" />
