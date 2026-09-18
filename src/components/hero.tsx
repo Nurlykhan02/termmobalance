@@ -6,7 +6,7 @@ export function Hero() {
     <section className="relative isolate min-h-[100svh] overflow-hidden bg-background">
       <HeroBackground />
 
-      <div className="mx-auto flex min-h-[100svh] max-w-[1380px] flex-col justify-end px-4 pt-24 pb-[18vh] sm:px-[30px] sm:pb-[16vh] lg:pb-20">
+      <div className="mx-auto flex min-h-[100svh] max-w-[1380px] flex-col justify-end px-4 pt-24 pb-8 sm:px-[30px] sm:pb-12 lg:pb-14">
         <div className="max-w-[600px] rounded-2xl border border-white/10 bg-black/42 p-4 shadow-[0_8px_40px_rgba(0,0,0,0.3)] backdrop-blur-md sm:max-w-[640px] sm:p-6 lg:p-7">
           <div className="mb-3 flex flex-wrap items-center gap-x-2.5 gap-y-1.5 sm:mb-4">
             <p className="flex items-center gap-2 text-[11px] font-medium tracking-[0.08em] text-white uppercase">
