@@ -9,11 +9,14 @@ const START_AT_SECONDS = 1.8;
 const FADE_WINDOW = 1.35;
 /** Hold a clean frame before the last (often broken) frames */
 const FREEZE_BEFORE_END = 0.55;
+/** Pause on the final frame before restarting */
+const RESTART_DELAY_MS = 3000;
 
 export function HeroBackground() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const startedRef = useRef(false);
   const settlingRef = useRef(false);
+  const restartTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -23,10 +26,22 @@ export function HeroBackground() {
       typeof window !== "undefined" &&
       window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+    const clearRestartTimer = () => {
+      if (restartTimerRef.current) {
+        clearTimeout(restartTimerRef.current);
+        restartTimerRef.current = null;
+      }
+    };
+
     const play = () => {
       void video.play().catch(() => {
         /* autoplay may be blocked until user gesture */
       });
+    };
+
+    const seekToStart = () => {
+      if (!Number.isFinite(video.duration) || video.duration <= 0) return;
+      return Math.min(START_AT_SECONDS, Math.max(0, video.duration - 0.5));
     };
 
     const startFromFace = () => {
@@ -34,33 +49,53 @@ export function HeroBackground() {
       if (!Number.isFinite(video.duration) || video.duration <= 0) return;
 
       startedRef.current = true;
-      const startAt = Math.min(
-        START_AT_SECONDS,
-        Math.max(0, video.duration - 0.5),
-      );
+      const startAt = seekToStart();
+      if (startAt == null) return;
       video.currentTime = startAt;
       play();
     };
 
+    const restartFromFace = () => {
+      settlingRef.current = false;
+      video.style.transition = "opacity 0.45s ease";
+      video.style.opacity = "1";
+      video.playbackRate = 1;
+      const startAt = seekToStart();
+      if (startAt == null) return;
+
+      const onSeeked = () => {
+        video.removeEventListener("seeked", onSeeked);
+        play();
+      };
+      video.addEventListener("seeked", onSeeked);
+      video.currentTime = startAt;
+    };
+
     const settleOnFrame = (freezeAt: number) => {
+      if (settlingRef.current) return;
       settlingRef.current = true;
+      clearRestartTimer();
       video.pause();
       video.playbackRate = 1;
 
-      const applyFreeze = () => {
+      const holdThenRestart = () => {
         video.style.transition = "opacity 0.7s ease";
         video.style.opacity = "1";
+        restartTimerRef.current = setTimeout(() => {
+          restartTimerRef.current = null;
+          restartFromFace();
+        }, RESTART_DELAY_MS);
       };
 
       if (Math.abs(video.currentTime - freezeAt) > 0.04) {
         const onSeeked = () => {
           video.removeEventListener("seeked", onSeeked);
-          applyFreeze();
+          holdThenRestart();
         };
         video.addEventListener("seeked", onSeeked);
         video.currentTime = freezeAt;
       } else {
-        applyFreeze();
+        holdThenRestart();
       }
     };
 
@@ -99,6 +134,7 @@ export function HeroBackground() {
     if (video.readyState >= 1) startFromFace();
 
     return () => {
+      clearRestartTimer();
       video.removeEventListener("loadedmetadata", startFromFace);
       video.removeEventListener("timeupdate", onTimeUpdate);
       video.removeEventListener("ended", onEnded);
