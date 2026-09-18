@@ -5,16 +5,23 @@ import { asset } from "@/lib/asset";
 
 /** Skip intro frames where the face is not yet visible */
 const START_AT_SECONDS = 1.8;
-/** Restart a bit before the last broken frames for a seamless loop */
-const LOOP_BEFORE_END = 0.35;
+/** Soften the last stretch so the freeze does not feel like a glitch */
+const FADE_WINDOW = 1.35;
+/** Hold a clean frame before the last (often broken) frames */
+const FREEZE_BEFORE_END = 0.55;
 
 export function HeroBackground() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const startedRef = useRef(false);
+  const settlingRef = useRef(false);
 
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
+
+    const prefersReduced =
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     const play = () => {
       void video.play().catch(() => {
@@ -35,33 +42,66 @@ export function HeroBackground() {
       play();
     };
 
-    const restartLoop = () => {
-      if (!Number.isFinite(video.duration) || video.duration <= 0) return;
-      const startAt = Math.min(
-        START_AT_SECONDS,
-        Math.max(0, video.duration - 0.5),
-      );
-      video.currentTime = startAt;
-      play();
+    const settleOnFrame = (freezeAt: number) => {
+      settlingRef.current = true;
+      video.pause();
+      video.playbackRate = 1;
+
+      const applyFreeze = () => {
+        video.style.transition = "opacity 0.7s ease";
+        video.style.opacity = "1";
+      };
+
+      if (Math.abs(video.currentTime - freezeAt) > 0.04) {
+        const onSeeked = () => {
+          video.removeEventListener("seeked", onSeeked);
+          applyFreeze();
+        };
+        video.addEventListener("seeked", onSeeked);
+        video.currentTime = freezeAt;
+      } else {
+        applyFreeze();
+      }
     };
 
     const onTimeUpdate = () => {
+      if (settlingRef.current) return;
       if (!Number.isFinite(video.duration) || video.duration <= 0) return;
+
       const remaining = video.duration - video.currentTime;
-      if (remaining <= LOOP_BEFORE_END) {
-        restartLoop();
+      const freezeAt = Math.max(0, video.duration - FREEZE_BEFORE_END);
+
+      if (remaining <= FREEZE_BEFORE_END) {
+        settleOnFrame(freezeAt);
+        return;
       }
+
+      if (prefersReduced || remaining > FADE_WINDOW) {
+        video.playbackRate = 1;
+        return;
+      }
+
+      const t = 1 - remaining / FADE_WINDOW;
+      const ease = 1 - (1 - t) ** 3;
+      video.playbackRate = Math.max(0.42, 1 - ease * 0.58);
+      video.style.opacity = String(1 - ease * 0.08);
+    };
+
+    const onEnded = () => {
+      if (settlingRef.current) return;
+      const freezeAt = Math.max(0, video.duration - FREEZE_BEFORE_END);
+      settleOnFrame(freezeAt);
     };
 
     video.addEventListener("loadedmetadata", startFromFace);
     video.addEventListener("timeupdate", onTimeUpdate);
-    video.addEventListener("ended", restartLoop);
+    video.addEventListener("ended", onEnded);
     if (video.readyState >= 1) startFromFace();
 
     return () => {
       video.removeEventListener("loadedmetadata", startFromFace);
       video.removeEventListener("timeupdate", onTimeUpdate);
-      video.removeEventListener("ended", restartLoop);
+      video.removeEventListener("ended", onEnded);
     };
   }, []);
 
