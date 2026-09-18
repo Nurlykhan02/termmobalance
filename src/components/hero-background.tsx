@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { asset } from "@/lib/asset";
 
 /** Skip intro frames where the face is not yet visible */
 const START_AT_SECONDS = 1.8;
@@ -117,10 +118,10 @@ export function HeroBackground() {
         muted
         playsInline
         preload="auto"
-        poster={`${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/images/hero-poster.jpg`}
+        poster={asset("/images/hero-poster.jpg")}
       >
         <source
-          src={`${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/desktop.mp4`}
+          src={asset("/desktop.mp4")}
           type="video/mp4"
         />
       </video>

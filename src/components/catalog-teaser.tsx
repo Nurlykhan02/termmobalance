@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useMemo, useState } from "react";
+import { asset } from "@/lib/asset";
 
 const WA_CONSULT =
   "https://wa.me/77781200084?text=" +
@@ -18,7 +19,7 @@ const CATEGORIES = [
 
 type CategoryId = (typeof CATEGORIES)[number]["id"];
 
-const DEFAULT_PRODUCT_IMAGE = "/images/products/quilt.jpg";
+const DEFAULT_PRODUCT_IMAGE = asset("/images/products/quilt.jpg");
 
 interface CatalogLine {
   id: string;

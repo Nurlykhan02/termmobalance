@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import { asset } from "@/lib/asset";
 
 const navLinks = [
   { label: "Каталог", href: "#catalog" },
@@ -102,7 +103,7 @@ export function SiteHeader() {
             >
               Бесплатная консультация
               <Image
-                src="/images/arrow.svg"
+                src={asset("/images/arrow.svg")}
                 alt=""
                 width={16}
                 height={16}
@@ -137,7 +138,7 @@ export function SiteHeader() {
               >
                 Бесплатная консультация
                 <Image
-                  src="/images/arrow.svg"
+                  src={asset("/images/arrow.svg")}
                   alt=""
                   width={14}
                   height={14}

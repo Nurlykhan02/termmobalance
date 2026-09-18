@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { asset } from "@/lib/asset";
 
 export function ContactStrip() {
   return (
@@ -42,7 +43,7 @@ export function ContactStrip() {
           >
             trmblnc0005@gmail.com
             <Image
-              src="/images/arrow.svg"
+              src={asset("/images/arrow.svg")}
               alt=""
               width={14}
               height={14}

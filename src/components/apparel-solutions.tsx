@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
+import { asset } from "@/lib/asset";
 
 const WA_EMBROIDERY =
   "https://wa.me/77781200084?text=" +
@@ -28,7 +29,7 @@ interface GalleryItem {
 }
 
 function photoPath(folder: string, file: string) {
-  return `/images/apparel/${folder}/${file}`;
+  return asset(`/images/apparel/${folder}/${file}`);
 }
 
 function numberedPhotos(count: number) {
