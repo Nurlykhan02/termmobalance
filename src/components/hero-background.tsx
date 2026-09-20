@@ -8,8 +8,8 @@ const FADE_MS = 900;
 const HOLD_FADED_MS = 400;
 const MOBILE_MQ = "(max-width: 1023px)";
 
-const SRC_MOBILE = asset("/first_mobile.mp4");
-const SRC_DESKTOP = asset("/third_desktop.mp4");
+const SRC_MOBILE = asset("/desktop.mp4");
+const SRC_DESKTOP = asset("/desktop.mp4");
 
 function pickHeroSrc() {
   if (typeof window === "undefined") return SRC_DESKTOP;

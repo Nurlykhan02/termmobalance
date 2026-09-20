@@ -346,7 +346,7 @@ export function CatalogTeaser() {
           />
 
           <div
-            className={`panel-slide-in relative z-[1] flex h-[100svh] max-h-[100dvh] w-full max-w-[400px] flex-col bg-white shadow-[-8px_0_24px_rgba(0,0,0,0.12)]${panelSettled ? " panel-slide-in--settled" : ""}`}
+            className={`panel-slide-in relative z-[1] flex h-[100svh] max-h-[100dvh] w-[82%] max-w-[380px] flex-col bg-white shadow-[-8px_0_24px_rgba(0,0,0,0.12)] sm:w-full sm:max-w-[400px]${panelSettled ? " panel-slide-in--settled" : ""}`}
             onAnimationEnd={() => setPanelSettled(true)}
           >
             <header className="flex shrink-0 items-start justify-between gap-3 border-b border-black/[0.06] px-4 py-3 sm:px-5 sm:py-3.5">
