@@ -284,12 +284,12 @@ export function CatalogTeaser() {
               aria-label={`Подробнее: ${line.name}`}
               className="group flex flex-col overflow-hidden rounded-[16px] bg-white text-left shadow-[0_4px_6px_rgba(33,14,3,0.03),0_10px_24px_rgba(31,158,150,0.08)] ring-1 ring-black/[0.04] transition-[transform,box-shadow] hover:-translate-y-0.5 hover:shadow-[0_8px_12px_rgba(33,14,3,0.04),0_16px_32px_rgba(31,158,150,0.14)] focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none"
             >
-              <div className="relative aspect-[3/4] overflow-hidden bg-[#f3f3f3]">
+              <div className="relative aspect-[3/4] overflow-hidden bg-[#eaf6f4]">
                 <Image
                   src={lineImage(line)}
                   alt={line.name}
                   fill
-                  className="object-contain object-center transition-transform duration-500 group-hover:scale-[1.02]"
+                  className="object-contain object-center p-1.5 transition-transform duration-500 group-hover:scale-[1.02] sm:p-2"
                   sizes="(max-width: 1024px) 45vw, 280px"
                   priority={index < 3}
                 />
@@ -333,7 +333,7 @@ export function CatalogTeaser() {
 
       {active ? (
         <div
-          className="fixed inset-0 z-50 flex justify-end"
+          className="fixed inset-0 z-50"
           role="dialog"
           aria-modal="true"
           aria-label={active.name}
@@ -346,7 +346,7 @@ export function CatalogTeaser() {
           />
 
           <div
-            className={`panel-slide-in relative z-[1] flex h-[100svh] max-h-[100dvh] w-[82%] max-w-[380px] flex-col bg-white shadow-[-8px_0_24px_rgba(0,0,0,0.12)] sm:w-full sm:max-w-[400px]${panelSettled ? " panel-slide-in--settled" : ""}`}
+            className={`panel-slide-in absolute top-0 right-0 bottom-0 z-[1] flex max-h-[100dvh] w-[82%] max-w-[380px] flex-col bg-white shadow-[-8px_0_24px_rgba(0,0,0,0.12)] sm:w-full sm:max-w-[400px]${panelSettled ? " panel-slide-in--settled" : ""}`}
             onAnimationEnd={() => setPanelSettled(true)}
           >
             <header className="flex shrink-0 items-start justify-between gap-3 border-b border-black/[0.06] px-4 py-3 sm:px-5 sm:py-3.5">
@@ -377,14 +377,14 @@ export function CatalogTeaser() {
                 type="button"
                 onClick={() => setImageZoomed(true)}
                 aria-label={`Увеличить фото: ${active.name}`}
-                className="relative mx-auto block h-[min(32vh,220px)] w-full max-w-[200px] overflow-hidden rounded-lg bg-[#f3f3f3] ring-1 ring-black/[0.06] transition-opacity hover:opacity-95 focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none"
+                className="relative mx-auto block h-[min(26vh,180px)] w-full max-w-[180px] overflow-hidden rounded-lg bg-[#f3f3f3] ring-1 ring-black/[0.06] transition-opacity hover:opacity-95 focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none"
               >
                 <Image
                   src={lineImage(active)}
                   alt={active.name}
                   fill
                   className="object-contain object-center"
-                  sizes="200px"
+                  sizes="180px"
                   quality={75}
                   priority
                 />
@@ -402,7 +402,7 @@ export function CatalogTeaser() {
                 </p>
               </div>
 
-              <ul className="mt-4 space-y-2">
+              <ul className="mt-4 space-y-2 pb-2">
                 {active.highlights.map((item) => (
                   <li
                     key={item}
@@ -418,14 +418,14 @@ export function CatalogTeaser() {
               </ul>
             </div>
 
-            <div className="relative z-10 shrink-0 border-t border-black/[0.06] bg-white px-4 pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom,0px))] sm:px-5">
+            <div className="relative z-10 shrink-0 border-t border-black/[0.06] bg-white px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom,0px))] sm:px-5 sm:pb-4">
               <a
                 href={waForLine(active.name)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-accent px-4 py-3 text-[14px] font-semibold text-white shadow-[0_6px_18px_rgba(31,158,150,0.28)] transition-opacity hover:opacity-95"
               >
-                Консультация и образец
+                Получить образец
                 <span aria-hidden>→</span>
               </a>
             </div>
