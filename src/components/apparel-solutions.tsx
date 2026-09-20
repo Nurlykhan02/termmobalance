@@ -167,16 +167,6 @@ export function ApparelSolutions() {
             другие изделия. Любые дизайны, вышивка и шевроны под бренд или
             задачу. Ниже — примеры наших работ.
           </p>
-
-          <a
-            href={WA_EMBROIDERY}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-5 inline-flex items-center gap-2 rounded-full bg-accent px-5 py-2.5 text-[13px] font-semibold text-white shadow-[0_8px_24px_rgba(31,158,150,0.28)] transition-[transform,opacity] hover:opacity-95 active:scale-[0.98]"
-          >
-            Бесплатная консультация
-            <span aria-hidden>→</span>
-          </a>
         </div>
 
         <div
@@ -296,7 +286,7 @@ export function ApparelSolutions() {
 
       {active ? (
         <div
-          className="fixed inset-0 z-50 flex items-start justify-center px-3 pt-[8vh] pb-6 sm:px-6 sm:pt-[10vh] sm:pb-10"
+          className="fixed inset-0 z-50"
           role="dialog"
           aria-modal="true"
           aria-label={active.title}
@@ -304,12 +294,12 @@ export function ApparelSolutions() {
           <button
             type="button"
             aria-label="Закрыть"
-            className="absolute inset-0 bg-ink/45 backdrop-blur-[2px]"
+            className="absolute inset-0 bg-black/40"
             onClick={closeAll}
           />
 
-          <div className="relative z-[1] flex max-h-[min(88dvh,760px)] w-full max-w-[560px] flex-col overflow-hidden rounded-[20px] bg-white shadow-[0_24px_80px_rgba(33,14,3,0.28)] ring-1 ring-black/[0.06] sm:max-w-[640px] sm:rounded-[24px]">
-            <header className="flex shrink-0 items-start justify-between gap-3 border-b border-black/[0.06] px-4 py-3 sm:px-5 sm:py-4">
+          <div className="panel-slide-in absolute inset-y-0 right-0 z-[1] flex h-[100dvh] w-[min(100%,400px)] flex-col bg-white shadow-[-8px_0_24px_rgba(0,0,0,0.12)]">
+            <header className="flex shrink-0 items-start justify-between gap-3 border-b border-black/[0.06] px-4 py-3.5 sm:px-5 sm:py-4">
               <div className="min-w-0 pt-0.5">
                 <h3 className="truncate text-[16px] font-semibold tracking-[-0.02em] text-ink sm:text-[18px]">
                   {active.title}
@@ -322,32 +312,32 @@ export function ApparelSolutions() {
               <button
                 type="button"
                 onClick={closeAll}
-                className="flex size-9 shrink-0 items-center justify-center rounded-full bg-accent text-[20px] leading-none text-white shadow-[0_6px_18px_rgba(31,158,150,0.3)] sm:size-10"
+                className="flex size-9 shrink-0 items-center justify-center rounded-full bg-accent text-[20px] leading-none text-white sm:size-10"
                 aria-label="Закрыть"
               >
                 ×
               </button>
             </header>
 
-            <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-3 py-3 sm:px-4 sm:py-4">
-              <div className="grid grid-cols-3 gap-2 sm:grid-cols-4 sm:gap-2.5">
+            <div className="min-h-0 flex-1 overflow-y-scroll overscroll-y-contain px-3 py-3 [-webkit-overflow-scrolling:touch] [touch-action:pan-y] sm:px-4 sm:py-4">
+              <div className="grid grid-cols-3 gap-2 sm:gap-2.5">
                 {active.photos.map((file, index) => (
                   <button
                     key={file}
                     type="button"
                     onClick={() => setLightboxIndex(index)}
-                    className="relative aspect-[3/4] overflow-hidden rounded-xl bg-[#eaf6f4] shadow-[0_2px_10px_rgba(31,158,150,0.1)] ring-1 ring-black/[0.04] transition-[transform,box-shadow] hover:-translate-y-0.5 hover:shadow-[0_8px_20px_rgba(31,158,150,0.18)] focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none"
+                    className="relative aspect-[3/4] overflow-hidden rounded-lg bg-[#eaf6f4] shadow-[0_2px_8px_rgba(31,158,150,0.1)] ring-1 ring-black/[0.04] transition-[transform,box-shadow] hover:-translate-y-0.5 hover:shadow-[0_6px_16px_rgba(31,158,150,0.18)] focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none"
                   >
                     <Image
                       src={photoPath(active.folder, file)}
                       alt={`${active.title} ${index + 1}`}
                       fill
                       className="object-cover object-[center_18%]"
-                      sizes="(max-width: 640px) 28vw, 140px"
-                      quality={80}
-                      priority={index < 4}
+                      sizes="120px"
+                      quality={70}
+                      priority={index < 6}
                     />
-                    <span className="absolute top-1.5 left-1.5 rounded-full bg-accent px-1.5 py-0.5 text-[9px] font-medium text-white tabular-nums shadow-[0_3px_10px_rgba(31,158,150,0.35)]">
+                    <span className="absolute top-1 left-1 rounded-full bg-accent px-1.5 py-0.5 text-[8px] font-medium text-white tabular-nums shadow-[0_2px_8px_rgba(31,158,150,0.35)]">
                       {index + 1}
                     </span>
                   </button>
@@ -364,21 +354,17 @@ export function ApparelSolutions() {
               aria-label={`${active.title} — фото ${lightboxIndex + 1}`}
               onClick={() => setLightboxIndex(null)}
             >
-              <div
-                className="absolute inset-0"
+              <Image
+                key={active.photos[lightboxIndex]}
+                src={photoPath(active.folder, active.photos[lightboxIndex])}
+                alt={`${active.title} ${lightboxIndex + 1}`}
+                fill
+                className="object-contain object-center"
+                sizes="100vw"
+                quality={95}
+                priority
                 onClick={(event) => event.stopPropagation()}
-              >
-                <Image
-                  key={active.photos[lightboxIndex]}
-                  src={photoPath(active.folder, active.photos[lightboxIndex])}
-                  alt={`${active.title} ${lightboxIndex + 1}`}
-                  fill
-                  className="object-contain"
-                  sizes="100vw"
-                  quality={95}
-                  priority
-                />
-              </div>
+              />
 
               <button
                 type="button"
@@ -404,7 +390,7 @@ export function ApparelSolutions() {
                           active.photos.length,
                       );
                     }}
-                    className="absolute top-1/2 left-2 z-10 flex size-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/30 bg-black/45 text-[28px] leading-none text-white backdrop-blur-sm transition-colors hover:bg-black/65 sm:left-5 sm:size-12"
+                    className="absolute top-1/2 left-2 z-10 flex size-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/30 bg-black/45 text-[28px] leading-none text-white transition-colors hover:bg-black/65 sm:left-5 sm:size-12"
                   >
                     ‹
                   </button>
@@ -417,7 +403,7 @@ export function ApparelSolutions() {
                         (lightboxIndex + 1) % active.photos.length,
                       );
                     }}
-                    className="absolute top-1/2 right-2 z-10 flex size-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/30 bg-black/45 text-[28px] leading-none text-white backdrop-blur-sm transition-colors hover:bg-black/65 sm:right-5 sm:size-12"
+                    className="absolute top-1/2 right-2 z-10 flex size-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/30 bg-black/45 text-[28px] leading-none text-white transition-colors hover:bg-black/65 sm:right-5 sm:size-12"
                   >
                     ›
                   </button>

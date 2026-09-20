@@ -75,6 +75,26 @@ body {
   }
 }
 
+@keyframes slide-in-right {
+  from {
+    transform: translate3d(100%, 0, 0);
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.panel-slide-in {
+  animation: slide-in-right 0.25s ease-out;
+  will-change: transform;
+}
+
+.panel-slide-in.panel-slide-in--settled {
+  animation: none;
+  transform: none;
+  will-change: auto;
+}
+
 #about .hq-pulse {
   transform-origin: center;
   transform-box: fill-box;
@@ -95,6 +115,10 @@ body {
   #about .hq-pulse,
   #about .hq-ring,
   #about .delivery-routes path {
+    animation: none;
+  }
+
+  .panel-slide-in {
     animation: none;
   }
 }
