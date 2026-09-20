@@ -159,7 +159,7 @@ export function ApparelSolutions() {
   return (
     <section
       id="apparel"
-      className="relative overflow-hidden bg-white px-4 py-14 text-ink sm:px-[30px] sm:py-20"
+      className="relative overflow-hidden bg-[#f7f5f0] px-4 py-14 text-ink sm:px-[30px] sm:py-20"
     >
       <div
         aria-hidden

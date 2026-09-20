@@ -4,8 +4,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { asset } from "@/lib/asset";
+import { SmoothScrollLink } from "@/components/smooth-scroll-link";
 
 const navLinks = [
+  { label: "Спецодежда", href: "#apparel" },
   { label: "Каталог", href: "#catalog" },
   { label: "Доставка", href: "#about" },
   { label: "Контакты", href: "#contact" },
@@ -66,7 +68,7 @@ export function SiteHeader() {
       </div>
 
       <div className="pointer-events-auto mx-auto hidden max-w-[1380px] items-center justify-center lg:flex">
-        <div className="flex min-w-[780px] items-center justify-between rounded-[12px] bg-surface py-[9px] pr-2 pl-5">
+        <div className="flex min-w-[820px] items-center justify-between rounded-[12px] bg-surface py-[9px] pr-2 pl-5">
           <div className="flex items-center gap-5">
             <Link href="/" aria-label="Termmo Balance" className="shrink-0">
               <BrandMark />
@@ -76,13 +78,13 @@ export function SiteHeader() {
 
             <nav className="flex items-center gap-5">
               {navLinks.map((link) => (
-                <Link
+                <SmoothScrollLink
                   key={link.href}
                   href={link.href}
                   className="text-[12px] font-medium text-muted transition-colors hover:text-ink"
                 >
                   {link.label}
-                </Link>
+                </SmoothScrollLink>
               ))}
             </nav>
           </div>
@@ -97,7 +99,7 @@ export function SiteHeader() {
               WhatsApp
             </a>
 
-            <Link
+            <SmoothScrollLink
               href="#contact"
               className="inline-flex items-center gap-2 rounded-full bg-ink px-4 py-2 text-[12px] font-medium text-white transition-opacity hover:opacity-90"
             >
@@ -109,7 +111,7 @@ export function SiteHeader() {
                 height={16}
                 className="brightness-0 invert"
               />
-            </Link>
+            </SmoothScrollLink>
           </div>
         </div>
       </div>
@@ -119,19 +121,19 @@ export function SiteHeader() {
           <nav className="overflow-hidden rounded-[16px] bg-surface shadow-[0_12px_40px_rgba(0,0,0,0.12)]">
             <div className="px-1 py-1">
               {navLinks.map((link) => (
-                <Link
+                <SmoothScrollLink
                   key={link.href}
                   href={link.href}
                   onClick={() => setMenuOpen(false)}
                   className="flex min-h-11 items-center rounded-[12px] px-4 text-[14px] font-medium tracking-[-0.01em] text-ink/80 transition-colors hover:bg-ink/5 hover:text-ink active:bg-ink/5"
                 >
                   {link.label}
-                </Link>
+                </SmoothScrollLink>
               ))}
             </div>
 
             <div className="flex flex-col gap-2 border-t border-ink/8 px-4 py-3.5">
-              <Link
+              <SmoothScrollLink
                 href="#contact"
                 onClick={() => setMenuOpen(false)}
                 className="inline-flex min-h-10 items-center justify-center gap-2 rounded-full bg-ink px-4 text-[13px] font-medium text-white"
@@ -144,7 +146,7 @@ export function SiteHeader() {
                   height={14}
                   className="brightness-0 invert"
                 />
-              </Link>
+              </SmoothScrollLink>
 
               <a
                 href="https://wa.me/77781200084"

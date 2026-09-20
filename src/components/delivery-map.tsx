@@ -1,6 +1,18 @@
 "use client";
 
+import Image from "next/image";
+import { useEffect, useState } from "react";
+import { asset } from "@/lib/asset";
+import { useSwipeToClose } from "@/hooks/use-swipe-to-close";
 import { KZ_OUTLINE } from "./delivery-map-geometry";
+
+const FACTORY_PHOTO = asset("/images/factory/plant.jpg");
+
+const WA_FACTORY =
+  "https://wa.me/77781200084?text=" +
+  encodeURIComponent(
+    "Здравствуйте! Хочу узнать о заводе Termmo Balance в Шымкенте — материалы и спецодежда.",
+  );
 
 const CITIES = [
   { id: "astana", name: "Астана", x: 578.8, y: 170.9, major: true },
@@ -21,49 +33,82 @@ const CITIES = [
 
 const SHYMKENT = { x: 549.4, y: 470.1 };
 
-function DeliveryRoutes() {
+interface MapViewBox {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+}
+
+/** Full national outline — same on mobile and desktop. */
+const FULL_VIEW: MapViewBox = { x: 0, y: 0, w: 960, h: 560 };
+
+function isInView(
+  x: number,
+  y: number,
+  view: MapViewBox,
+  pad = 28,
+) {
+  return (
+    x > view.x + pad &&
+    x < view.x + view.w - pad &&
+    y > view.y + pad &&
+    y < view.y + view.h - pad
+  );
+}
+
+function DeliveryRoutes({ view }: { view: MapViewBox }) {
   return (
     <g aria-hidden className="delivery-routes">
-      {CITIES.map((city) => {
-        const midX = (SHYMKENT.x + city.x) / 2;
-        const midY = Math.min(SHYMKENT.y, city.y) - 28;
-        return (
-          <path
-            key={city.id}
-            d={`M${SHYMKENT.x} ${SHYMKENT.y} Q${midX} ${midY} ${city.x} ${city.y}`}
-            fill="none"
-            stroke="#1f9e96"
-            strokeOpacity="0.38"
-            strokeWidth="1.35"
-            strokeLinecap="round"
-            strokeDasharray="4 8"
-          />
-        );
-      })}
+      {CITIES.filter((city) => isInView(city.x, city.y, view, 8)).map(
+        (city) => {
+          const midX = (SHYMKENT.x + city.x) / 2;
+          const midY = Math.min(SHYMKENT.y, city.y) - 28;
+          return (
+            <path
+              key={city.id}
+              d={`M${SHYMKENT.x} ${SHYMKENT.y} Q${midX} ${midY} ${city.x} ${city.y}`}
+              fill="none"
+              stroke="#1f9e96"
+              strokeOpacity="0.38"
+              strokeWidth="1.35"
+              strokeLinecap="round"
+              strokeDasharray="4 8"
+            />
+          );
+        },
+      )}
     </g>
   );
 }
 
-function KazakhstanSvg() {
+function KazakhstanSvg({
+  view,
+  uid,
+}: {
+  view: MapViewBox;
+  uid: string;
+}) {
   return (
     <svg
-      viewBox="0 0 960 560"
+      viewBox={`${view.x} ${view.y} ${view.w} ${view.h}`}
+      preserveAspectRatio="xMidYMid meet"
       role="img"
-      aria-label="Карта Казахстана: производство в Шымкенте, доставка по всей стране"
-      className="h-auto w-full overflow-visible"
+      aria-hidden
+      className="absolute inset-0 h-full w-full overflow-visible"
     >
       <defs>
-        <linearGradient id="kz-fill" x1="12%" y1="8%" x2="88%" y2="92%">
+        <linearGradient id={`${uid}-fill`} x1="12%" y1="8%" x2="88%" y2="92%">
           <stop offset="0%" stopColor="#1f9e96" stopOpacity="0.2" />
           <stop offset="50%" stopColor="#1f9e96" stopOpacity="0.1" />
           <stop offset="100%" stopColor="#210e03" stopOpacity="0.05" />
         </linearGradient>
-        <linearGradient id="kz-stroke" x1="0%" y1="50%" x2="100%" y2="50%">
+        <linearGradient id={`${uid}-stroke`} x1="0%" y1="50%" x2="100%" y2="50%">
           <stop offset="0%" stopColor="#1f9e96" stopOpacity="0.4" />
           <stop offset="45%" stopColor="#1f9e96" stopOpacity="0.95" />
           <stop offset="100%" stopColor="#1f9e96" stopOpacity="0.45" />
         </linearGradient>
-        <filter id="kz-soft" x="-8%" y="-8%" width="116%" height="116%">
+        <filter id={`${uid}-soft`} x="-8%" y="-8%" width="116%" height="116%">
           <feGaussianBlur in="SourceAlpha" stdDeviation="6" result="b" />
           <feOffset dy="4" result="o" />
           <feComponentTransfer in="o" result="s">
@@ -74,7 +119,7 @@ function KazakhstanSvg() {
             <feMergeNode in="SourceGraphic" />
           </feMerge>
         </filter>
-        <radialGradient id="hq-glow" cx="50%" cy="50%" r="50%">
+        <radialGradient id={`${uid}-glow`} cx="50%" cy="50%" r="50%">
           <stop offset="0%" stopColor="#1f9e96" stopOpacity="0.5" />
           <stop offset="100%" stopColor="#1f9e96" stopOpacity="0" />
         </radialGradient>
@@ -91,20 +136,17 @@ function KazakhstanSvg() {
 
       <path
         d={KZ_OUTLINE}
-        fill="url(#kz-fill)"
-        stroke="url(#kz-stroke)"
+        fill={`url(#${uid}-fill)`}
+        stroke={`url(#${uid}-stroke)`}
         strokeWidth="2.75"
         strokeLinejoin="round"
-        filter="url(#kz-soft)"
+        filter={`url(#${uid}-soft)`}
       />
 
-      <DeliveryRoutes />
+      <DeliveryRoutes view={view} />
 
-      {CITIES.map((city) => (
-        <g
-          key={city.id}
-          className={city.major ? undefined : "max-sm:opacity-0"}
-        >
+      {CITIES.filter((city) => isInView(city.x, city.y, view)).map((city) => (
+        <g key={city.id} className={city.major ? undefined : "max-sm:hidden"}>
           <circle
             cx={city.x}
             cy={city.y}
@@ -132,58 +174,302 @@ function KazakhstanSvg() {
           cx={SHYMKENT.x}
           cy={SHYMKENT.y}
           r="42"
-          fill="url(#hq-glow)"
+          fill={`url(#${uid}-glow)`}
           className="hq-pulse"
         />
         <circle
           cx={SHYMKENT.x}
           cy={SHYMKENT.y}
-          r="24"
+          r="28"
           fill="none"
           stroke="#1f9e96"
           strokeWidth="1.6"
           strokeOpacity="0.5"
           className="hq-ring"
         />
-        <circle cx={SHYMKENT.x} cy={SHYMKENT.y} r="9" fill="#1f9e96" />
-        <circle cx={SHYMKENT.x} cy={SHYMKENT.y} r="3.75" fill="#f7f5f0" />
-
-        <g transform={`translate(${SHYMKENT.x - 58}, ${SHYMKENT.y + 20})`}>
-          <rect width="116" height="30" rx="15" fill="#210e03" />
-          <text
-            x="58"
-            y="19.5"
-            textAnchor="middle"
-            fill="#f7f5f0"
-            fontSize="12.5"
-            fontWeight="600"
-            style={{ fontFamily: "var(--font-geist-sans), sans-serif" }}
-          >
-            Шымкент · завод
-          </text>
-        </g>
       </g>
     </svg>
   );
 }
 
+function FactoryPin({
+  view,
+  onOpen,
+}: {
+  view: MapViewBox;
+  onOpen: () => void;
+}) {
+  const left = ((SHYMKENT.x - view.x) / view.w) * 100;
+  const top = ((SHYMKENT.y - view.y) / view.h) * 100;
+
+  return (
+    <button
+      type="button"
+      onClick={onOpen}
+      aria-haspopup="dialog"
+      aria-label="Завод Termmo Balance в Шымкенте"
+      className="absolute z-10 flex size-14 -translate-x-1/2 -translate-y-1/2 items-center justify-center sm:size-[4.5rem]"
+      style={{ left: `${left}%`, top: `${top}%` }}
+    >
+      <span className="relative size-11 overflow-hidden rounded-full bg-accent shadow-[0_10px_28px_rgba(31,158,150,0.35)] ring-[3px] ring-white transition-transform hover:scale-105 sm:size-14">
+        <Image
+          src={FACTORY_PHOTO}
+          alt=""
+          fill
+          className="object-cover object-center"
+          sizes="56px"
+          quality={70}
+        />
+      </span>
+    </button>
+  );
+}
+
+function FactoryCard({
+  onOpen,
+  stacked = false,
+}: {
+  onOpen: () => void;
+  stacked?: boolean;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onOpen}
+      aria-haspopup="dialog"
+      className={
+        stacked
+          ? "relative z-20 flex w-full gap-3 rounded-2xl border border-ink/8 bg-white p-2.5 text-left shadow-[0_10px_28px_rgba(33,14,3,0.1)]"
+          : "absolute inset-x-auto left-5 bottom-5 z-20 flex w-[min(100%,340px)] gap-3 rounded-2xl border border-ink/8 bg-white/95 p-2.5 text-left shadow-[0_16px_40px_rgba(33,14,3,0.16)] backdrop-blur-md"
+      }
+    >
+      <span className="relative h-[68px] w-[80px] shrink-0 overflow-hidden rounded-xl bg-[#eaf6f4] sm:h-[84px] sm:w-[104px]">
+        <Image
+          src={FACTORY_PHOTO}
+          alt=""
+          fill
+          className="object-cover"
+          sizes="104px"
+          quality={72}
+        />
+      </span>
+      <span className="min-w-0 flex-1 py-0.5 pr-1">
+        <span className="block text-[11px] font-medium tracking-[0.04em] text-accent uppercase">
+          Шымкент · с 2008
+        </span>
+        <span className="mt-0.5 block font-display text-[14px] leading-tight font-semibold tracking-[-0.03em] text-ink sm:text-[16px]">
+          Завод Termmo Balance
+        </span>
+        <span className="mt-1 block text-[12px] leading-snug text-muted">
+          Утеплители, наполнители и спецодежда — со своего производства.
+        </span>
+        <span className="mt-1.5 inline-flex items-center gap-1 text-[12px] font-semibold text-accent">
+          О заводе
+          <span aria-hidden>→</span>
+        </span>
+      </span>
+    </button>
+  );
+}
+
+function MapCanvas({
+  onOpenFactory,
+  showOverlayCard = false,
+}: {
+  onOpenFactory: () => void;
+  showOverlayCard?: boolean;
+}) {
+  return (
+    <div className="relative aspect-[960/560] w-full overflow-hidden bg-[#efebe3]">
+      <KazakhstanSvg view={FULL_VIEW} uid={showOverlayCard ? "kz-d" : "kz-m"} />
+      <FactoryPin view={FULL_VIEW} onOpen={onOpenFactory} />
+      {showOverlayCard ? <FactoryCard onOpen={onOpenFactory} /> : null}
+    </div>
+  );
+}
+
+function FactoryPanel({ onClose }: { onClose: () => void }) {
+  const [panelSettled, setPanelSettled] = useState(false);
+  const [imageZoomed, setImageZoomed] = useState(false);
+
+  const {
+    panelRef,
+    handlers: swipeHandlers,
+    style: swipeStyle,
+  } = useSwipeToClose({
+    onClose,
+    enabled: !imageZoomed,
+  });
+
+  useEffect(() => {
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key !== "Escape") return;
+      if (imageZoomed) setImageZoomed(false);
+      else onClose();
+    };
+
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = prev;
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [imageZoomed, onClose]);
+
+  return (
+    <div
+      className="fixed inset-0 z-50"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="factory-panel-title"
+    >
+      <button
+        type="button"
+        aria-label="Закрыть"
+        className="absolute inset-0 bg-black/40"
+        onClick={onClose}
+      />
+
+      <div
+        ref={panelRef}
+        {...swipeHandlers}
+        style={swipeStyle}
+        className={`panel-slide-in absolute inset-y-0 right-0 z-[1] flex h-[100dvh] w-[86%] max-w-[400px] flex-col bg-white shadow-[-8px_0_24px_rgba(0,0,0,0.12)] sm:w-full${panelSettled ? " panel-slide-in--settled" : ""}`}
+        onAnimationEnd={() => setPanelSettled(true)}
+      >
+        <header className="flex shrink-0 items-start justify-between gap-3 border-b border-black/[0.06] px-4 py-3.5 sm:px-5 sm:py-4">
+          <div className="min-w-0 pt-0.5">
+            <p className="text-[12px] font-medium text-accent">Производство</p>
+            <h3
+              id="factory-panel-title"
+              className="mt-0.5 text-[16px] font-semibold tracking-[-0.02em] text-ink sm:text-[18px]"
+            >
+              Завод в Шымкенте
+            </h3>
+            <p className="mt-0.5 text-[12px] text-muted sm:text-[13px]">
+              ул. Жибек-Жолы 66/3
+            </p>
+          </div>
+
+          <button
+            type="button"
+            onClick={onClose}
+            className="flex size-9 shrink-0 items-center justify-center rounded-full bg-accent text-[20px] leading-none text-white sm:size-10"
+            aria-label="Закрыть"
+          >
+            ×
+          </button>
+        </header>
+
+        <div className="min-h-0 flex-1 overflow-y-scroll overscroll-y-contain px-4 py-3 [-webkit-overflow-scrolling:touch] [touch-action:pan-y] sm:px-5 sm:py-4">
+          <button
+            type="button"
+            onClick={() => setImageZoomed(true)}
+            aria-label="Увеличить фото завода"
+            className="relative block aspect-[16/10] w-full overflow-hidden rounded-xl bg-[#eaf6f4] ring-1 ring-black/[0.06] focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none"
+          >
+            <Image
+              src={FACTORY_PHOTO}
+              alt="Производственный цех Termmo Balance"
+              fill
+              className="object-cover"
+              sizes="400px"
+              quality={82}
+              priority
+            />
+            <span className="absolute right-2 bottom-2 rounded-full bg-black/55 px-2.5 py-1 text-[11px] font-medium text-white">
+              Увеличить
+            </span>
+          </button>
+
+          <p className="mt-4 text-[14px] leading-relaxed text-ink/85">
+            Свой завод и склад в Шымкенте: производим утеплители и наполнители
+            для текстиля и шьём утеплённую спецодежду на заказ. Отсюда материал
+            и готовые изделия уходят по всему Казахстану.
+          </p>
+
+          <ul className="mt-4 space-y-2.5 pb-3">
+            {[
+              "Линейки Teksulate, UniFiber и стёжка — с одной площадки",
+              "Склад на месте: отгружаем объём без перекупщиков",
+              "Доставка в любой регион — от Актау до Усть-Каменогорска",
+              "Со швейными фабриками и государственными заказчиками с 2008 года",
+            ].map((item) => (
+              <li
+                key={item}
+                className="flex items-start gap-2.5 text-[13px] leading-snug text-ink/85"
+              >
+                <span
+                  aria-hidden
+                  className="mt-1.5 size-1.5 shrink-0 rounded-full bg-accent"
+                />
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div className="relative z-10 shrink-0 border-t border-black/[0.06] bg-white px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom,0px))] sm:px-5 sm:pb-4">
+          <a
+            href={WA_FACTORY}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-accent px-4 py-3 text-[14px] font-semibold text-white shadow-[0_6px_18px_rgba(31,158,150,0.28)] transition-opacity hover:opacity-95"
+          >
+            Написать заводу
+            <span aria-hidden>→</span>
+          </a>
+        </div>
+      </div>
+
+      {imageZoomed ? (
+        <div
+          className="fixed inset-0 z-[60] bg-black"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Фото завода"
+          onClick={() => setImageZoomed(false)}
+        >
+          <Image
+            src={FACTORY_PHOTO}
+            alt="Производственный цех Termmo Balance"
+            fill
+            className="object-contain object-center"
+            sizes="100vw"
+            quality={90}
+            priority
+            onClick={(event) => event.stopPropagation()}
+          />
+          <button
+            type="button"
+            onClick={() => setImageZoomed(false)}
+            className="absolute top-3 right-3 z-10 flex size-11 items-center justify-center rounded-full bg-white text-[22px] leading-none text-ink sm:top-5 sm:right-5"
+            aria-label="Закрыть фото"
+          >
+            ×
+          </button>
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
 export function DeliveryMap() {
+  const [factoryOpen, setFactoryOpen] = useState(false);
+
   return (
     <section
       id="about"
-      className="relative overflow-hidden bg-[#f3f0ea] px-4 py-14 text-ink sm:px-[30px] sm:py-20"
+      className="relative bg-[#f7f5f0] py-14 text-ink sm:px-[30px] sm:py-20"
     >
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_72%_38%,rgba(31,158,150,0.16),transparent_52%),radial-gradient(ellipse_at_12%_85%,rgba(33,14,3,0.05),transparent_48%)]"
-      />
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 opacity-[0.4] [background-image:linear-gradient(rgba(33,14,3,0.035)_1px,transparent_1px),linear-gradient(90deg,rgba(33,14,3,0.035)_1px,transparent_1px)] [background-size:44px_44px] [mask-image:radial-gradient(ellipse_at_center,black_15%,transparent_72%)]"
+        className="pointer-events-none absolute inset-0 overflow-hidden bg-[radial-gradient(ellipse_at_72%_38%,rgba(31,158,150,0.12),transparent_52%),radial-gradient(ellipse_at_12%_85%,rgba(33,14,3,0.04),transparent_48%)]"
       />
 
       <div className="relative mx-auto max-w-[1280px]">
-        <div className="mx-auto max-w-[700px] text-center">
+        <div className="mx-auto max-w-[700px] px-4 text-center sm:px-0">
           <h2 className="font-display text-[clamp(1.7rem,4vw,2.8rem)] leading-[1.08] font-semibold tracking-[-0.035em]">
             Доставка по всему Казахстану
           </h2>
@@ -194,13 +480,28 @@ export function DeliveryMap() {
           </p>
         </div>
 
-        <div className="relative mx-auto mt-8 max-w-[1000px] sm:mt-12">
-          <div className="rounded-[24px] border border-ink/[0.05] bg-white/60 px-1 py-4 shadow-[0_24px_70px_rgba(33,14,3,0.07)] backdrop-blur-sm sm:rounded-[28px] sm:px-4 sm:py-7 lg:px-8 lg:py-9">
-            <KazakhstanSvg />
+        <div className="relative mt-7 md:mx-auto md:mt-10 md:max-w-[920px]">
+          <div className="overflow-hidden md:rounded-[20px] md:ring-1 md:ring-ink/[0.06]">
+            <div className="md:hidden">
+              <MapCanvas onOpenFactory={() => setFactoryOpen(true)} />
+            </div>
+            <div className="hidden md:block">
+              <MapCanvas
+                showOverlayCard
+                onOpenFactory={() => setFactoryOpen(true)}
+              />
+            </div>
+          </div>
+
+          <div className="px-4 pt-3 md:hidden">
+            <FactoryCard
+              stacked
+              onOpen={() => setFactoryOpen(true)}
+            />
           </div>
         </div>
 
-        <ul className="mx-auto mt-9 flex max-w-[880px] flex-col divide-y divide-ink/10 border-y border-ink/10 sm:mt-11 sm:flex-row sm:divide-x sm:divide-y-0">
+        <ul className="mx-auto mt-8 flex max-w-[880px] flex-col divide-y divide-ink/10 border-y border-ink/10 px-4 sm:mt-11 sm:flex-row sm:divide-x sm:divide-y-0 sm:px-0">
           <li className="flex-1 px-2 py-4 text-center sm:px-5 sm:py-5">
             <p className="font-display text-[1.25rem] font-semibold tracking-[-0.03em] text-accent sm:text-[1.4rem]">
               Шымкент
@@ -227,6 +528,10 @@ export function DeliveryMap() {
           </li>
         </ul>
       </div>
+
+      {factoryOpen ? (
+        <FactoryPanel onClose={() => setFactoryOpen(false)} />
+      ) : null}
     </section>
   );
 }

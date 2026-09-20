@@ -285,7 +285,7 @@ export function CatalogTeaser() {
           })}
         </div>
 
-        <div className="mx-auto mt-7 grid max-w-[920px] grid-cols-2 gap-3 sm:mt-9 sm:gap-4 lg:grid-cols-3">
+        <div className="mt-7 grid grid-cols-2 gap-3 sm:mt-9 sm:gap-4 lg:grid-cols-3">
           {filtered.map((line, index) => (
             <button
               key={line.id}
@@ -299,7 +299,7 @@ export function CatalogTeaser() {
                   src={lineImage(line)}
                   alt={line.name}
                   fill
-                  className="object-contain object-center p-1.5 transition-transform duration-500 group-hover:scale-[1.02] sm:p-2"
+                  className="rounded-[10px] object-cover object-[center_12%] transition-transform duration-500 group-hover:scale-[1.02]"
                   sizes="(max-width: 1024px) 45vw, 280px"
                   priority={index < 3}
                 />

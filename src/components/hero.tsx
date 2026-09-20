@@ -8,6 +8,9 @@ export function Hero() {
 
       <div className="mx-auto flex min-h-[100svh] max-w-[1380px] flex-col justify-end px-4 pt-24 pb-8 sm:px-[30px] sm:pb-12 lg:pb-14">
         <div className="max-w-[600px] rounded-2xl border border-white/10 bg-black/42 p-4 shadow-[0_8px_40px_rgba(0,0,0,0.3)] backdrop-blur-md sm:max-w-[640px] sm:p-6 lg:p-7">
+          <p className="mb-2.5 text-[11px] font-medium tracking-[0.1em] text-white/60 uppercase sm:mb-3">
+            Шымкент · свой завод · с 2008
+          </p>
           <h1 className="text-[clamp(1.75rem,5vw,3.2rem)] leading-[1.05] font-semibold tracking-[-0.04em] text-white">
             Утеплители и наполнители для текстиля
           </h1>

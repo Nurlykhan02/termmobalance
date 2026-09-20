@@ -27,15 +27,18 @@ interface SmoothScrollLinkProps {
   href: string;
   className?: string;
   children: ReactNode;
+  onClick?: (event: MouseEvent<HTMLAnchorElement>) => void;
 }
 
 export function SmoothScrollLink({
   href,
   className,
   children,
+  onClick,
 }: SmoothScrollLinkProps) {
-  const onClick = (event: MouseEvent<HTMLAnchorElement>) => {
-    if (!href.startsWith("#")) return;
+  const handleClick = (event: MouseEvent<HTMLAnchorElement>) => {
+    onClick?.(event);
+    if (event.defaultPrevented || !href.startsWith("#")) return;
 
     const id = href.slice(1);
     const target = document.getElementById(id);
@@ -53,7 +56,7 @@ export function SmoothScrollLink({
   };
 
   return (
-    <a href={href} className={className} onClick={onClick}>
+    <a href={href} className={className} onClick={handleClick}>
       {children}
     </a>
   );
