@@ -1,10 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { asset } from "@/lib/asset";
 
-const SHOW_AFTER_MS = 5000;
 const HIDE_AFTER_MS = 15000;
 
 const WA_DISCOUNT =
@@ -16,21 +15,44 @@ const WA_DISCOUNT =
 export function DiscountToast() {
   const [visible, setVisible] = useState(false);
   const [leaving, setLeaving] = useState(false);
+  const shownRef = useRef(false);
 
   useEffect(() => {
+    const mapSection = document.getElementById("about");
+    if (!mapSection) return;
+
     let hideTimer: ReturnType<typeof setTimeout> | undefined;
     let removeTimer: ReturnType<typeof setTimeout> | undefined;
 
-    const showTimer = setTimeout(() => {
+    const show = () => {
+      if (shownRef.current) return;
+      shownRef.current = true;
       setVisible(true);
       hideTimer = setTimeout(() => {
         setLeaving(true);
         removeTimer = setTimeout(() => setVisible(false), 320);
       }, HIDE_AFTER_MS);
-    }, SHOW_AFTER_MS);
+    };
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          show();
+          observer.disconnect();
+        }
+      },
+      {
+        // Trigger when the Kazakhstan map section enters the lower half of the viewport
+        root: null,
+        threshold: 0.15,
+        rootMargin: "0px 0px -20% 0px",
+      },
+    );
+
+    observer.observe(mapSection);
 
     return () => {
-      clearTimeout(showTimer);
+      observer.disconnect();
       if (hideTimer) clearTimeout(hideTimer);
       if (removeTimer) clearTimeout(removeTimer);
     };
