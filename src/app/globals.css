@@ -261,3 +261,40 @@ body {
 .trusted-by-item:hover .trusted-by-name {
   color: var(--ink);
 }
+
+@keyframes discount-toast-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 16px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes discount-toast-out {
+  from {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    opacity: 0;
+    transform: translate3d(0, 12px, 0);
+  }
+}
+
+.discount-toast--in {
+  animation: discount-toast-in 0.35s ease-out both;
+}
+
+.discount-toast--out {
+  animation: discount-toast-out 0.28s ease-in both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .discount-toast--in,
+  .discount-toast--out {
+    animation: none;
+  }
+}

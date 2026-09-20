@@ -2,6 +2,7 @@ import { ApparelSolutions } from "@/components/apparel-solutions";
 import { CatalogTeaser } from "@/components/catalog-teaser";
 import { ContactStrip } from "@/components/contact-strip";
 import { DeliveryMap } from "@/components/delivery-map";
+import { DiscountToast } from "@/components/discount-toast";
 import { Hero } from "@/components/hero";
 import { ReviewsMosaic } from "@/components/reviews-mosaic";
 import { SiteHeader } from "@/components/site-header";
@@ -18,6 +19,7 @@ export default function Home() {
       <CatalogTeaser />
       <DeliveryMap />
       <ContactStrip />
+      <DiscountToast />
     </main>
   );
 }
