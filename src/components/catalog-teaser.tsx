@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
 import { asset } from "@/lib/asset";
+import { useSwipeToClose } from "@/hooks/use-swipe-to-close";
 
 const WA_CONSULT =
   "https://wa.me/77781200084?text=" +
@@ -198,6 +199,15 @@ export function CatalogTeaser() {
     setImageZoomed(false);
   };
 
+  const {
+    panelRef,
+    handlers: swipeHandlers,
+    style: swipeStyle,
+  } = useSwipeToClose({
+    onClose: closeLine,
+    enabled: Boolean(active) && !imageZoomed,
+  });
+
   useEffect(() => {
     if (!active) return;
 
@@ -346,6 +356,9 @@ export function CatalogTeaser() {
           />
 
           <div
+            ref={panelRef}
+            {...swipeHandlers}
+            style={swipeStyle}
             className={`panel-slide-in absolute top-0 right-0 bottom-0 z-[1] flex max-h-[100dvh] w-[82%] max-w-[380px] flex-col bg-white shadow-[-8px_0_24px_rgba(0,0,0,0.12)] sm:w-full sm:max-w-[400px]${panelSettled ? " panel-slide-in--settled" : ""}`}
             onAnimationEnd={() => setPanelSettled(true)}
           >

@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
 import { asset } from "@/lib/asset";
+import { useSwipeToClose } from "@/hooks/use-swipe-to-close";
 
 const WA_EMBROIDERY =
   "https://wa.me/77781200084?text=" +
@@ -114,6 +115,15 @@ export function ApparelSolutions() {
     setActiveId(null);
     setLightboxIndex(null);
   };
+
+  const {
+    panelRef,
+    handlers: swipeHandlers,
+    style: swipeStyle,
+  } = useSwipeToClose({
+    onClose: closeAll,
+    enabled: Boolean(active) && lightboxIndex === null,
+  });
 
   useEffect(() => {
     if (!active) return;
@@ -298,7 +308,12 @@ export function ApparelSolutions() {
             onClick={closeAll}
           />
 
-          <div className="panel-slide-in absolute inset-y-0 right-0 z-[1] flex h-[100dvh] w-[82%] max-w-[380px] flex-col bg-white shadow-[-8px_0_24px_rgba(0,0,0,0.12)] sm:w-full sm:max-w-[400px]">
+          <div
+            ref={panelRef}
+            {...swipeHandlers}
+            style={swipeStyle}
+            className="panel-slide-in absolute inset-y-0 right-0 z-[1] flex h-[100dvh] w-[82%] max-w-[380px] flex-col bg-white shadow-[-8px_0_24px_rgba(0,0,0,0.12)] sm:w-full sm:max-w-[400px]"
+          >
             <header className="flex shrink-0 items-start justify-between gap-3 border-b border-black/[0.06] px-4 py-3.5 sm:px-5 sm:py-4">
               <div className="min-w-0 pt-0.5">
                 <h3 className="truncate text-[16px] font-semibold tracking-[-0.02em] text-ink sm:text-[18px]">
