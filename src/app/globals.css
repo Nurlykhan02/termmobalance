@@ -37,7 +37,9 @@ html {
 #apparel,
 #catalog,
 #contact,
-#about {
+#about,
+#reviews,
+#trusted {
   scroll-margin-top: 1rem;
 }
 
@@ -122,4 +124,140 @@ body {
   .panel-slide-in {
     animation: none;
   }
+
+  .reviews-mosaic-col--up,
+  .reviews-mosaic-col--down,
+  .trusted-by-track {
+    animation: none;
+  }
+
+  .trusted-by-track {
+    flex-wrap: wrap;
+    justify-content: center;
+    width: auto;
+  }
+}
+
+/* Reviews mosaic */
+.reviews-mosaic-bg {
+  transform: rotate(-6deg);
+}
+
+.reviews-mosaic-frame::before,
+.reviews-mosaic-frame::after {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.reviews-mosaic-frame::before {
+  inset: 0 0 auto;
+  height: 88px;
+  background: linear-gradient(to bottom, var(--surface) 10%, transparent);
+}
+
+.reviews-mosaic-frame::after {
+  inset: auto 0 0;
+  height: 120px;
+  background: linear-gradient(to top, var(--surface) 18%, transparent);
+}
+
+.reviews-mosaic-frame {
+  mask-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    #000 6%,
+    #000 94%,
+    transparent 100%
+  );
+}
+
+@keyframes reviews-drift-up {
+  to {
+    translate: 0 -33.3333%;
+  }
+}
+
+@keyframes reviews-drift-down {
+  from {
+    translate: 0 -33.3333%;
+  }
+  to {
+    translate: 0 0;
+  }
+}
+
+.reviews-mosaic-col--up {
+  animation: reviews-drift-up 48s linear infinite;
+}
+
+.reviews-mosaic-col--down {
+  animation: reviews-drift-down 48s linear infinite;
+}
+
+/* Trusted-by marquee — light surface */
+.trusted-by-marquee {
+  mask-image: linear-gradient(
+    90deg,
+    transparent,
+    #000 7%,
+    #000 93%,
+    transparent
+  );
+}
+
+@keyframes trusted-marquee {
+  to {
+    transform: translate(-50%);
+  }
+}
+
+.trusted-by-track {
+  animation: trusted-marquee 40s linear infinite;
+}
+
+.trusted-by-marquee:hover .trusted-by-track {
+  animation-play-state: paused;
+}
+
+.trusted-by-logo--ink {
+  filter: brightness(0);
+  opacity: 0.38;
+  transition:
+    filter 0.25s,
+    opacity 0.25s;
+}
+
+.trusted-by-logo--ink-light {
+  filter: brightness(0);
+  opacity: 0.42;
+  transition:
+    filter 0.25s,
+    opacity 0.25s;
+}
+
+.trusted-by-logo--mark {
+  filter: none;
+  opacity: 0.78;
+  transition:
+    filter 0.25s,
+    opacity 0.25s;
+}
+
+.trusted-by-item:hover {
+  background: color-mix(in oklab, var(--accent) 12%, white);
+}
+
+.trusted-by-item:hover .trusted-by-logo--ink,
+.trusted-by-item:hover .trusted-by-logo--ink-light {
+  opacity: 0.78;
+}
+
+.trusted-by-item:hover .trusted-by-logo--mark {
+  opacity: 1;
+}
+
+.trusted-by-item:hover .trusted-by-name {
+  color: var(--ink);
 }
