@@ -158,12 +158,7 @@ export function ApparelSolutions() {
 
       <div className="relative mx-auto max-w-[1280px]">
         <div className="flex flex-col items-center text-center">
-          <p className="inline-flex items-center gap-2 rounded-full border border-accent/20 bg-accent/[0.08] px-3.5 py-1.5 text-[11px] font-medium tracking-[0.08em] text-accent uppercase">
-            <span aria-hidden className="size-1.5 rounded-full bg-accent" />
-            Вышивка
-          </p>
-
-          <h2 className="font-display mt-4 max-w-[720px] text-[clamp(1.7rem,4.2vw,3.1rem)] leading-[1.08] font-semibold tracking-[-0.035em] text-ink">
+          <h2 className="font-display max-w-[720px] text-[clamp(1.7rem,4.2vw,3.1rem)] leading-[1.08] font-semibold tracking-[-0.035em] text-ink">
             Наши работы по вышивке спецодежды
           </h2>
 
@@ -301,18 +296,22 @@ export function ApparelSolutions() {
 
       {active ? (
         <div
-          className="fixed inset-0 z-50 bg-white"
+          className="fixed inset-0 z-50 flex items-start justify-center px-3 pt-[8vh] pb-6 sm:px-6 sm:pt-[10vh] sm:pb-10"
           role="dialog"
           aria-modal="true"
           aria-label={active.title}
         >
-          <div className="mx-auto flex h-[100dvh] w-full max-w-[1100px] flex-col">
-            <header className="flex shrink-0 items-start justify-between gap-3 border-b border-black/[0.06] bg-white/90 px-4 py-3 shadow-[0_4px_20px_rgba(31,158,150,0.06)] backdrop-blur-md sm:px-6 sm:py-4">
+          <button
+            type="button"
+            aria-label="Закрыть"
+            className="absolute inset-0 bg-ink/45 backdrop-blur-[2px]"
+            onClick={closeAll}
+          />
+
+          <div className="relative z-[1] flex max-h-[min(88dvh,760px)] w-full max-w-[560px] flex-col overflow-hidden rounded-[20px] bg-white shadow-[0_24px_80px_rgba(33,14,3,0.28)] ring-1 ring-black/[0.06] sm:max-w-[640px] sm:rounded-[24px]">
+            <header className="flex shrink-0 items-start justify-between gap-3 border-b border-black/[0.06] px-4 py-3 sm:px-5 sm:py-4">
               <div className="min-w-0 pt-0.5">
-                <p className="text-[11px] font-medium tracking-[0.12em] text-accent uppercase">
-                  {active.categoryLabel}
-                </p>
-                <h3 className="mt-0.5 truncate text-[18px] font-semibold tracking-[-0.02em] text-ink sm:text-[22px]">
+                <h3 className="truncate text-[16px] font-semibold tracking-[-0.02em] text-ink sm:text-[18px]">
                   {active.title}
                 </h3>
                 <p className="mt-0.5 text-[12px] text-muted sm:text-[13px]">
@@ -323,32 +322,32 @@ export function ApparelSolutions() {
               <button
                 type="button"
                 onClick={closeAll}
-                className="flex size-11 shrink-0 items-center justify-center rounded-full bg-accent text-[22px] leading-none text-white shadow-[0_6px_18px_rgba(31,158,150,0.3)]"
+                className="flex size-9 shrink-0 items-center justify-center rounded-full bg-accent text-[20px] leading-none text-white shadow-[0_6px_18px_rgba(31,158,150,0.3)] sm:size-10"
                 aria-label="Закрыть"
               >
                 ×
               </button>
             </header>
 
-            <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain bg-[#f7fbfa] px-3 py-3 sm:px-6 sm:py-5">
-              <div className="grid grid-cols-2 gap-2.5 sm:gap-4 md:grid-cols-3">
+            <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-3 py-3 sm:px-4 sm:py-4">
+              <div className="grid grid-cols-3 gap-2 sm:grid-cols-4 sm:gap-2.5">
                 {active.photos.map((file, index) => (
                   <button
                     key={file}
                     type="button"
                     onClick={() => setLightboxIndex(index)}
-                    className="relative aspect-[3/4] overflow-hidden rounded-2xl bg-white shadow-[0_4px_16px_rgba(31,158,150,0.12)] ring-1 ring-black/[0.04] transition-[transform,box-shadow] hover:-translate-y-0.5 hover:shadow-[0_10px_28px_rgba(31,158,150,0.2)] focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none"
+                    className="relative aspect-[3/4] overflow-hidden rounded-xl bg-[#eaf6f4] shadow-[0_2px_10px_rgba(31,158,150,0.1)] ring-1 ring-black/[0.04] transition-[transform,box-shadow] hover:-translate-y-0.5 hover:shadow-[0_8px_20px_rgba(31,158,150,0.18)] focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none"
                   >
                     <Image
                       src={photoPath(active.folder, file)}
                       alt={`${active.title} ${index + 1}`}
                       fill
                       className="object-cover object-[center_18%]"
-                      sizes="(max-width: 640px) 50vw, 33vw"
-                      quality={85}
+                      sizes="(max-width: 640px) 28vw, 140px"
+                      quality={80}
                       priority={index < 4}
                     />
-                    <span className="absolute top-2 left-2 rounded-full bg-accent px-2 py-0.5 text-[10px] font-medium text-white tabular-nums shadow-[0_3px_10px_rgba(31,158,150,0.35)]">
+                    <span className="absolute top-1.5 left-1.5 rounded-full bg-accent px-1.5 py-0.5 text-[9px] font-medium text-white tabular-nums shadow-[0_3px_10px_rgba(31,158,150,0.35)]">
                       {index + 1}
                     </span>
                   </button>

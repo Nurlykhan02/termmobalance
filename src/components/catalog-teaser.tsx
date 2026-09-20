@@ -131,12 +131,7 @@ export function CatalogTeaser() {
 
       <div className="relative mx-auto max-w-[1280px]">
         <div className="mx-auto max-w-[720px] text-center">
-          <p className="inline-flex items-center gap-2 rounded-full border border-accent/20 bg-accent/[0.08] px-3.5 py-1.5 text-[11px] font-medium tracking-[0.08em] text-accent uppercase">
-            <span aria-hidden className="size-1.5 rounded-full bg-accent" />
-            Каталог нетканой продукции
-          </p>
-
-          <h2 className="font-display mt-4 text-[clamp(1.7rem,4vw,2.8rem)] leading-[1.08] font-semibold tracking-[-0.035em]">
+          <h2 className="font-display text-[clamp(1.7rem,4vw,2.8rem)] leading-[1.08] font-semibold tracking-[-0.035em]">
             Линейки утеплителей с нашего завода
           </h2>
 

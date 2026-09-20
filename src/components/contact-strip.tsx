@@ -10,10 +10,7 @@ export function ContactStrip() {
     >
       <div className="mx-auto flex max-w-[1380px] flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
         <div className="max-w-[560px]">
-          <p className="text-[11px] font-semibold tracking-[0.12em] text-accent uppercase">
-            Контакты
-          </p>
-          <h2 className="mt-2 text-[clamp(1.5rem,3vw,2.2rem)] leading-tight font-semibold tracking-[-0.03em]">
+          <h2 className="text-[clamp(1.5rem,3vw,2.2rem)] leading-tight font-semibold tracking-[-0.03em]">
             Бесплатная консультация и образец
           </h2>
           <p className="mt-3 text-[15px] leading-relaxed text-white/70">
