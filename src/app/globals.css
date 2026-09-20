@@ -221,45 +221,17 @@ body {
   animation-play-state: paused;
 }
 
-.trusted-by-logo--ink {
-  filter: brightness(0);
-  opacity: 0.38;
-  transition:
-    filter 0.25s,
-    opacity 0.25s;
-}
-
-.trusted-by-logo--ink-light {
-  filter: brightness(0);
-  opacity: 0.42;
-  transition:
-    filter 0.25s,
-    opacity 0.25s;
-}
-
-.trusted-by-logo--mark {
-  filter: none;
-  opacity: 0.78;
-  transition:
-    filter 0.25s,
-    opacity 0.25s;
+.trusted-by-logo {
+  opacity: 0.72;
+  transition: opacity 0.25s;
 }
 
 .trusted-by-item:hover {
-  background: color-mix(in oklab, var(--accent) 12%, white);
+  background: color-mix(in oklab, var(--accent) 10%, white);
 }
 
-.trusted-by-item:hover .trusted-by-logo--ink,
-.trusted-by-item:hover .trusted-by-logo--ink-light {
-  opacity: 0.78;
-}
-
-.trusted-by-item:hover .trusted-by-logo--mark {
+.trusted-by-item:hover .trusted-by-logo {
   opacity: 1;
-}
-
-.trusted-by-item:hover .trusted-by-name {
-  color: var(--ink);
 }
 
 @keyframes discount-toast-in {
