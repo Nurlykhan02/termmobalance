@@ -16,23 +16,29 @@ function pickHeroSrc() {
   return window.matchMedia(MOBILE_MQ).matches ? SRC_MOBILE : SRC_DESKTOP;
 }
 
-export function HeroBackground() {
+export function HeroBackground({ src: srcOverride }: { src?: string } = {}) {
+  const fixedSrc = srcOverride ? asset(srcOverride) : null;
   const videoRef = useRef<HTMLVideoElement>(null);
   const startedRef = useRef(false);
   const phaseRef = useRef<"play" | "fading-out" | "hold" | "fading-in">(
     "play",
   );
   const timersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
-  const [src, setSrc] = useState(SRC_DESKTOP);
+  const [src, setSrc] = useState(fixedSrc ?? SRC_DESKTOP);
 
   useEffect(() => {
+    if (fixedSrc) {
+      setSrc(fixedSrc);
+      return;
+    }
+
     const sync = () => setSrc(pickHeroSrc());
     sync();
 
     const mql = window.matchMedia(MOBILE_MQ);
     mql.addEventListener("change", sync);
     return () => mql.removeEventListener("change", sync);
-  }, []);
+  }, [fixedSrc]);
 
   useEffect(() => {
     const video = videoRef.current;

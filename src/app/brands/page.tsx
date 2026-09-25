@@ -1,24 +1,52 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import { Hero } from "@/components/hero";
+import { SiteHeader } from "@/components/site-header";
+
+const WA_SEWING =
+  "https://wa.me/77781200084?text=" +
+  encodeURIComponent(
+    "Здравствуйте! Нужен пошив одежды под наш бренд — с логотипом.",
+  );
 
 export const metadata: Metadata = {
-  title: "Пошив одежды и 2EASY — Termmo Balance",
+  title: "Пошив одежды под ваш бренд — Termmo Balance",
   description:
-    "Шьём одежду под ваш бренд и развиваем собственный fashion-бренд 2EASY.",
+    "Шьём любую одежду под любой бренд: футболки, худи, свитшоты. Логотип, вышивка и шевроны со своего завода в Шымкенте.",
 };
 
-/** Placeholder page — content coming later */
 export default function BrandsPage() {
   return (
-    <main className="min-h-[100svh] bg-surface text-ink">
-      <div className="mx-auto flex min-h-[100svh] max-w-[1380px] flex-col px-4 py-6 sm:px-[30px]">
-        <Link
-          href="/"
-          className="inline-flex w-fit text-[13px] font-medium text-muted transition-colors hover:text-ink"
-        >
-          ← Termmo Balance
-        </Link>
-      </div>
+    <main>
+      <SiteHeader
+        logoHref="/brands/"
+        links={[
+          { label: "Пошив", href: "/brands/" },
+          { label: "Завод", href: "/" },
+          { label: "Контакты", href: "/#contact" },
+        ]}
+        cta={{ label: "Заказать пошив", href: WA_SEWING }}
+      />
+      <Hero
+        backgroundSrc="/brands_hero_background.mp4"
+        eyebrow="Пошив одежды · Шымкент · с 2008"
+        title="Шьём любую одежду под любой бренд"
+        description={
+          <>
+            Футболки, худи, свитшоты и другая одежда на заказ. Наносим{" "}
+            <span className="font-semibold text-white">логотип</span>, вышивку
+            и шевроны — со своего завода{" "}
+            <span className="font-semibold text-accent">в Казахстане</span>.
+          </>
+        }
+        actions={[
+          { href: WA_SEWING, label: "Заказать пошив", tone: "solid" },
+          {
+            href: "https://wa.me/77781200084",
+            label: "WhatsApp",
+            tone: "ghost",
+          },
+        ]}
+      />
     </main>
   );
 }

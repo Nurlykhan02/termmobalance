@@ -2,16 +2,66 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { asset } from "@/lib/asset";
 import { SmoothScrollLink } from "@/components/smooth-scroll-link";
 
-const navLinks = [
+type HeaderLink = {
+  label: string;
+  href: string;
+};
+
+const HOME_LINKS: HeaderLink[] = [
   { label: "Спецодежда", href: "#apparel" },
   { label: "Материалы", href: "#catalog" },
   { label: "Доставка", href: "#about" },
   { label: "Контакты", href: "#contact" },
-] as const;
+];
+
+const HOME_CTA: HeaderLink = {
+  label: "Бесплатная консультация",
+  href: "#contact",
+};
+
+function NavItem({
+  href,
+  className,
+  onClick,
+  children,
+}: {
+  href: string;
+  className?: string;
+  onClick?: () => void;
+  children: ReactNode;
+}) {
+  if (href.startsWith("#")) {
+    return (
+      <SmoothScrollLink href={href} className={className} onClick={onClick}>
+        {children}
+      </SmoothScrollLink>
+    );
+  }
+
+  if (href.startsWith("http")) {
+    return (
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={className}
+        onClick={onClick}
+      >
+        {children}
+      </a>
+    );
+  }
+
+  return (
+    <Link href={href} className={className} onClick={onClick}>
+      {children}
+    </Link>
+  );
+}
 
 function BrandMark() {
   return (
@@ -32,14 +82,24 @@ function BrandMark() {
   );
 }
 
-export function SiteHeader() {
+export function SiteHeader({
+  links = HOME_LINKS,
+  logoHref = "/",
+  cta = HOME_CTA,
+  whatsappHref = "https://wa.me/77781200084",
+}: {
+  links?: HeaderLink[];
+  logoHref?: string;
+  cta?: HeaderLink;
+  whatsappHref?: string;
+} = {}) {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
     <header className="pointer-events-none absolute inset-x-0 top-0 z-50 px-4 pt-4 sm:px-[30px] sm:pt-6">
       <div className="pointer-events-auto mx-auto flex max-w-[1380px] items-center justify-between gap-3 lg:hidden">
         <Link
-          href="/"
+          href={logoHref}
           aria-label="Termmo Balance"
           className="inline-flex shrink-0 items-center rounded-[12px] bg-surface px-3.5 py-2.5"
         >
@@ -70,28 +130,28 @@ export function SiteHeader() {
       <div className="pointer-events-auto mx-auto hidden max-w-[1380px] items-center justify-center lg:flex">
         <div className="flex min-w-[820px] items-center justify-between rounded-[12px] bg-surface py-[9px] pr-2 pl-5">
           <div className="flex items-center gap-5">
-            <Link href="/" aria-label="Termmo Balance" className="shrink-0">
+            <Link href={logoHref} aria-label="Termmo Balance" className="shrink-0">
               <BrandMark />
             </Link>
 
             <span aria-hidden className="h-[25px] w-px bg-ink/10" />
 
             <nav className="flex items-center gap-5">
-              {navLinks.map((link) => (
-                <SmoothScrollLink
+              {links.map((link) => (
+                <NavItem
                   key={link.href}
                   href={link.href}
                   className="text-[12px] font-medium text-muted transition-colors hover:text-ink"
                 >
                   {link.label}
-                </SmoothScrollLink>
+                </NavItem>
               ))}
             </nav>
           </div>
 
           <div className="flex items-center gap-2">
             <a
-              href="https://wa.me/77781200084"
+              href={whatsappHref}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center rounded-full border border-ink/15 px-4 py-2 text-[12px] font-medium text-ink transition-colors hover:bg-ink/5"
@@ -99,11 +159,11 @@ export function SiteHeader() {
               WhatsApp
             </a>
 
-            <SmoothScrollLink
-              href="#contact"
+            <NavItem
+              href={cta.href}
               className="inline-flex items-center gap-2 rounded-full bg-ink px-4 py-2 text-[12px] font-medium text-white transition-opacity hover:opacity-90"
             >
-              Бесплатная консультация
+              {cta.label}
               <Image
                 src={asset("/images/arrow.svg")}
                 alt=""
@@ -111,7 +171,7 @@ export function SiteHeader() {
                 height={16}
                 className="brightness-0 invert"
               />
-            </SmoothScrollLink>
+            </NavItem>
           </div>
         </div>
       </div>
@@ -120,25 +180,25 @@ export function SiteHeader() {
         <div className="pointer-events-auto mx-auto mt-3 max-w-[1380px] lg:hidden">
           <nav className="overflow-hidden rounded-[16px] bg-surface shadow-[0_12px_40px_rgba(0,0,0,0.12)]">
             <div className="px-1 py-1">
-              {navLinks.map((link) => (
-                <SmoothScrollLink
+              {links.map((link) => (
+                <NavItem
                   key={link.href}
                   href={link.href}
                   onClick={() => setMenuOpen(false)}
                   className="flex min-h-11 items-center rounded-[12px] px-4 text-[14px] font-medium tracking-[-0.01em] text-ink/80 transition-colors hover:bg-ink/5 hover:text-ink active:bg-ink/5"
                 >
                   {link.label}
-                </SmoothScrollLink>
+                </NavItem>
               ))}
             </div>
 
             <div className="flex flex-col gap-2 border-t border-ink/8 px-4 py-3.5">
-              <SmoothScrollLink
-                href="#contact"
+              <NavItem
+                href={cta.href}
                 onClick={() => setMenuOpen(false)}
                 className="inline-flex min-h-10 items-center justify-center gap-2 rounded-full bg-ink px-4 text-[13px] font-medium text-white"
               >
-                Бесплатная консультация
+                {cta.label}
                 <Image
                   src={asset("/images/arrow.svg")}
                   alt=""
@@ -146,10 +206,10 @@ export function SiteHeader() {
                   height={14}
                   className="brightness-0 invert"
                 />
-              </SmoothScrollLink>
+              </NavItem>
 
               <a
-                href="https://wa.me/77781200084"
+                href={whatsappHref}
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => setMenuOpen(false)}
