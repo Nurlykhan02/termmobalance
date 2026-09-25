@@ -82,7 +82,7 @@ function MosaicColumn({
               width={img.width}
               height={img.height}
               sizes="(max-width: 909px) 180px, min(20vw, 290px)"
-              className="block h-auto w-full rounded-[14px] border border-ink/[0.06] shadow-[0_8px_10px_rgba(33,14,3,0.03),0_20px_48px_rgba(31,158,150,0.12)]"
+              className="shadow-accent-card block h-auto w-full rounded-[14px] border border-ink/[0.06]"
               priority={g === 0 && index === 0}
             />
           ))}
@@ -100,7 +100,7 @@ export function ReviewsMosaic() {
     >
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 top-0 h-64 bg-[radial-gradient(ellipse_at_50%_0%,rgba(31,158,150,0.08),transparent_70%)]"
+        className="accent-veil pointer-events-none absolute inset-x-0 top-0 h-64"
       />
 
       <div className="relative z-[2] mx-auto max-w-[1280px]">

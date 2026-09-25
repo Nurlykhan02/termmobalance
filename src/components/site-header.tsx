@@ -8,7 +8,7 @@ import { SmoothScrollLink } from "@/components/smooth-scroll-link";
 
 const navLinks = [
   { label: "Спецодежда", href: "#apparel" },
-  { label: "Каталог", href: "#catalog" },
+  { label: "Материалы", href: "#catalog" },
   { label: "Доставка", href: "#about" },
   { label: "Контакты", href: "#contact" },
 ] as const;

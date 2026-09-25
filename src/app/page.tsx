@@ -3,6 +3,7 @@ import { CatalogTeaser } from "@/components/catalog-teaser";
 import { ContactStrip } from "@/components/contact-strip";
 import { DeliveryMap } from "@/components/delivery-map";
 import { DiscountToast } from "@/components/discount-toast";
+import { EasyBrand } from "@/components/easy-brand";
 import { Hero } from "@/components/hero";
 import { ReviewsMosaic } from "@/components/reviews-mosaic";
 import { SiteHeader } from "@/components/site-header";
@@ -18,6 +19,7 @@ export default function Home() {
       <ApparelSolutions />
       <CatalogTeaser />
       <DeliveryMap />
+      <EasyBrand />
       <ContactStrip />
       <DiscountToast />
     </main>

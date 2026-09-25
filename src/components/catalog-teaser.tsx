@@ -229,11 +229,11 @@ export function CatalogTeaser() {
   return (
     <section
       id="catalog"
-      className="relative overflow-hidden bg-[#f7f5f0] px-4 py-14 text-ink sm:px-[30px] sm:py-20"
+      className="relative overflow-hidden bg-surface px-4 py-14 text-ink sm:px-[30px] sm:py-20"
     >
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 top-0 h-56 bg-[radial-gradient(ellipse_at_50%_0%,rgba(31,158,150,0.1),transparent_70%)]"
+        className="accent-veil pointer-events-none absolute inset-x-0 top-0 h-56"
       />
 
       <div className="relative mx-auto max-w-[1280px]">
@@ -266,7 +266,7 @@ export function CatalogTeaser() {
                 onClick={() => setFilter(category.id)}
                 className={
                   isActive
-                    ? "inline-flex items-center gap-2 rounded-full bg-accent px-4 py-2 text-[13px] font-medium text-white shadow-[0_6px_18px_rgba(31,158,150,0.28)]"
+                    ? "shadow-accent-btn inline-flex items-center gap-2 rounded-full bg-accent px-4 py-2 text-[13px] font-medium text-white"
                     : "inline-flex items-center gap-2 rounded-full border border-black/[0.08] bg-white px-4 py-2 text-[13px] font-medium text-ink/65 shadow-[0_2px_8px_rgba(33,14,3,0.04)] transition-colors hover:border-accent/35 hover:text-ink"
                 }
               >
@@ -292,9 +292,9 @@ export function CatalogTeaser() {
               type="button"
               onClick={() => openLine(line.id)}
               aria-label={`Подробнее: ${line.name}`}
-              className="group flex flex-col overflow-hidden rounded-[16px] bg-white text-left shadow-[0_4px_6px_rgba(33,14,3,0.03),0_10px_24px_rgba(31,158,150,0.08)] ring-1 ring-black/[0.04] transition-[transform,box-shadow] hover:-translate-y-0.5 hover:shadow-[0_8px_12px_rgba(33,14,3,0.04),0_16px_32px_rgba(31,158,150,0.14)] focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none"
+              className="shadow-accent-card hover:shadow-accent-card-hover group flex flex-col overflow-hidden rounded-[16px] bg-raised text-left ring-1 ring-black/[0.04] transition-[transform,box-shadow] hover:-translate-y-0.5 focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none"
             >
-              <div className="relative aspect-[3/4] overflow-hidden bg-[#eaf6f4]">
+              <div className="relative aspect-[3/4] overflow-hidden bg-wash">
                 <Image
                   src={lineImage(line)}
                   alt={line.name}
@@ -315,7 +315,7 @@ export function CatalogTeaser() {
                   </p>
                 </div>
 
-                <span className="mt-auto inline-flex w-full items-center justify-center gap-1.5 rounded-full bg-accent px-3 py-2 text-[12px] font-semibold text-white shadow-[0_5px_14px_rgba(31,158,150,0.25)] transition-opacity group-hover:opacity-95">
+                <span className="shadow-accent-btn mt-auto inline-flex w-full items-center justify-center gap-1.5 rounded-full bg-accent px-3 py-2 text-[12px] font-semibold text-white transition-opacity group-hover:opacity-95">
                   Подробнее
                   <span aria-hidden>→</span>
                 </span>
@@ -390,7 +390,7 @@ export function CatalogTeaser() {
                 type="button"
                 onClick={() => setImageZoomed(true)}
                 aria-label={`Увеличить фото: ${active.name}`}
-                className="relative mx-auto block h-[min(26vh,180px)] w-full max-w-[180px] overflow-hidden rounded-lg bg-[#f3f3f3] ring-1 ring-black/[0.06] transition-opacity hover:opacity-95 focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none"
+                className="relative mx-auto block h-[min(26vh,180px)] w-full max-w-[180px] overflow-hidden rounded-lg bg-wash ring-1 ring-black/[0.06] transition-opacity hover:opacity-95 focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none"
               >
                 <Image
                   src={lineImage(active)}
@@ -436,7 +436,7 @@ export function CatalogTeaser() {
                 href={waForLine(active.name)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-accent px-4 py-3 text-[14px] font-semibold text-white shadow-[0_6px_18px_rgba(31,158,150,0.28)] transition-opacity hover:opacity-95"
+                className="shadow-accent-btn inline-flex w-full items-center justify-center gap-2 rounded-full bg-accent px-4 py-3 text-[14px] font-semibold text-white transition-opacity hover:opacity-95"
               >
                 Получить образец
                 <span aria-hidden>→</span>

@@ -159,11 +159,11 @@ export function ApparelSolutions() {
   return (
     <section
       id="apparel"
-      className="relative overflow-hidden bg-[#f7f5f0] px-4 py-14 text-ink sm:px-[30px] sm:py-20"
+      className="relative overflow-hidden bg-surface px-4 py-14 text-ink sm:px-[30px] sm:py-20"
     >
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 top-0 h-64 bg-[radial-gradient(ellipse_at_50%_0%,rgba(31,158,150,0.08),transparent_70%)]"
+        className="accent-veil pointer-events-none absolute inset-x-0 top-0 h-64"
       />
 
       <div className="relative mx-auto max-w-[1280px]">
@@ -196,7 +196,7 @@ export function ApparelSolutions() {
                 onClick={() => setFilter(category.id)}
                 className={
                   isActive
-                    ? "inline-flex items-center gap-2 rounded-full bg-accent px-4 py-2 text-[13px] font-medium text-white shadow-[0_6px_18px_rgba(31,158,150,0.28)]"
+                    ? "shadow-accent-btn inline-flex items-center gap-2 rounded-full bg-accent px-4 py-2 text-[13px] font-medium text-white"
                     : "inline-flex items-center gap-2 rounded-full border border-black/[0.08] bg-white px-4 py-2 text-[13px] font-medium text-ink/65 shadow-[0_2px_8px_rgba(33,14,3,0.04)] transition-colors hover:border-accent/35 hover:text-ink"
                 }
               >
@@ -222,9 +222,9 @@ export function ApparelSolutions() {
               type="button"
               onClick={() => openItem(item.id)}
               aria-label={`Смотреть все: ${item.title}`}
-              className="group overflow-hidden rounded-[16px] bg-white text-left shadow-[0_4px_6px_rgba(33,14,3,0.03),0_10px_28px_rgba(31,158,150,0.10)] ring-1 ring-black/[0.04] transition-[transform,box-shadow] hover:-translate-y-1 hover:shadow-[0_8px_12px_rgba(33,14,3,0.04),0_18px_40px_rgba(31,158,150,0.16)] focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none sm:rounded-[18px]"
+              className="shadow-accent-card hover:shadow-accent-card-hover group overflow-hidden rounded-[16px] bg-raised text-left ring-1 ring-black/[0.04] transition-[transform,box-shadow] hover:-translate-y-1 focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none sm:rounded-[18px]"
             >
-              <div className="relative aspect-[3/4] overflow-hidden bg-[#eaf6f4]">
+              <div className="relative aspect-[3/4] overflow-hidden bg-wash">
                 <Image
                   src={coverOf(item)}
                   alt={item.title}
@@ -238,7 +238,7 @@ export function ApparelSolutions() {
                   aria-hidden
                   className="pointer-events-none absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-white/35 to-transparent"
                 />
-                <span className="absolute top-2 left-2 z-[1] rounded-full bg-accent px-2 py-0.5 text-[10px] font-medium text-white shadow-[0_4px_12px_rgba(31,158,150,0.35)] sm:top-2.5 sm:left-2.5 sm:px-2.5 sm:py-1 sm:text-[11px]">
+                <span className="shadow-accent-btn absolute top-2 left-2 z-[1] rounded-full bg-accent px-2 py-0.5 text-[10px] font-medium text-white sm:top-2.5 sm:left-2.5 sm:px-2.5 sm:py-1 sm:text-[11px]">
                   {item.categoryLabel}
                 </span>
                 <span className="absolute top-2 right-2 z-[1] flex items-center gap-1.5 rounded-[10px] bg-white/95 px-1.5 py-1 shadow-[0_4px_14px_rgba(33,14,3,0.12)] backdrop-blur-sm sm:top-2.5 sm:right-2.5 sm:gap-2 sm:rounded-[12px] sm:px-2 sm:py-1.5">
@@ -257,7 +257,7 @@ export function ApparelSolutions() {
                 </span>
               </div>
 
-              <div className="flex flex-col gap-2 border-t border-accent/10 bg-gradient-to-b from-[#f3faf8] to-white p-2.5 sm:gap-2.5 sm:p-3.5">
+              <div className="flex flex-col gap-2 border-t border-accent/10 bg-gradient-to-b from-wash to-raised p-2.5 sm:gap-2.5 sm:p-3.5">
                 <div>
                   <h3 className="text-[14px] leading-tight font-semibold tracking-[-0.02em] text-ink sm:text-[16px]">
                     {item.title}
@@ -267,7 +267,7 @@ export function ApparelSolutions() {
                   </p>
                 </div>
 
-                <span className="inline-flex w-full items-center justify-center gap-1.5 rounded-full bg-accent px-2.5 py-2 text-[11px] font-semibold text-white shadow-[0_5px_14px_rgba(31,158,150,0.28)] sm:gap-2 sm:px-3 sm:text-[12px]">
+                <span className="shadow-accent-btn inline-flex w-full items-center justify-center gap-1.5 rounded-full bg-accent px-2.5 py-2 text-[11px] font-semibold text-white sm:gap-2 sm:px-3 sm:text-[12px]">
                   Смотреть все
                   <span className="tabular-nums text-white/75">
                     {item.photos.length}
@@ -341,7 +341,7 @@ export function ApparelSolutions() {
                     key={file}
                     type="button"
                     onClick={() => setLightboxIndex(index)}
-                    className="relative aspect-[3/4] overflow-hidden rounded-lg bg-[#eaf6f4] shadow-[0_2px_8px_rgba(31,158,150,0.1)] ring-1 ring-black/[0.04] transition-[transform,box-shadow] hover:-translate-y-0.5 hover:shadow-[0_6px_16px_rgba(31,158,150,0.18)] focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none"
+                    className="shadow-accent-card relative aspect-[3/4] overflow-hidden rounded-lg bg-wash ring-1 ring-black/[0.04] transition-[transform,box-shadow] hover:-translate-y-0.5 hover:shadow-accent-card-hover focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none"
                   >
                     <Image
                       src={photoPath(active.folder, file)}
@@ -352,7 +352,7 @@ export function ApparelSolutions() {
                       quality={70}
                       priority={index < 6}
                     />
-                    <span className="absolute top-1 left-1 rounded-full bg-accent px-1.5 py-0.5 text-[8px] font-medium text-white tabular-nums shadow-[0_2px_8px_rgba(31,158,150,0.35)]">
+                    <span className="shadow-accent-btn absolute top-1 left-1 rounded-full bg-accent px-1.5 py-0.5 text-[8px] font-medium text-white tabular-nums">
                       {index + 1}
                     </span>
                   </button>

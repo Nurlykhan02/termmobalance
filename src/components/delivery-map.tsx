@@ -1,9 +1,13 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { asset } from "@/lib/asset";
 import { useSwipeToClose } from "@/hooks/use-swipe-to-close";
+import {
+  CompanyHistoryTimeline,
+  type HistoryPeriod,
+} from "./company-history-timeline";
 import { KZ_OUTLINE } from "./delivery-map-geometry";
 
 const FACTORY_PHOTO = asset("/images/factory/plant.jpg");
@@ -13,6 +17,84 @@ const WA_FACTORY =
   encodeURIComponent(
     "Здравствуйте! Хочу узнать о заводе Termmo Balance в Шымкенте — материалы и спецодежда.",
   );
+
+/** История компании — с termmobalance.net */
+const COMPANY_HISTORY: readonly HistoryPeriod[] = [
+  {
+    year: "2008 – 2010",
+    label: "Старт",
+    items: [
+      "Запуск первой линии производства утеплителей под брендом Синтермо",
+      "Начало работы компании, направленной на создание инновационных материалов для текстиля",
+      "Запуск линии по производству наполнителей для текстильной промышленности",
+      "Расширение ассортимента продукции для работы с швейными фабриками",
+    ],
+  },
+  {
+    year: "2012 – 2013",
+    label: "Стандарты",
+    items: [
+      "Разработка методик и оформление стандартов по выпуску высококачественной продукции утеплителей",
+      "Продукция марок UniFiber и Teksulate успешно прошла этапы испытаний на качество",
+      "Расширение и строительство производственных площадей площадью 500 м² для линий нетканых материалов",
+      "Подготовка к запуску новых производственных направлений",
+    ],
+  },
+  {
+    year: "2014 – 2015",
+    label: "Госзаказы",
+    items: [
+      "Запуск линии по производству нетканого полотна и наполнителей для одеял",
+      "Внедрена линия стегальной машины для пошива подкладок — ускорили производство и качество спецодежды партнёров",
+      "Заключение долгосрочного контракта с Министерством обороны на обеспечение высококачественными утеплителями",
+      "Укрепление позиций компании как надёжного партнёра для государственных структур",
+    ],
+  },
+  {
+    year: "2016 – 2017",
+    label: "Швейный цех",
+    items: [
+      "Расширение производственных мощностей на 900 м² для создания швейного производства",
+      "Подготовка к масштабному выпуску спецодежды и других текстильных изделий",
+    ],
+  },
+  {
+    year: "2018 – 2019",
+    label: "Масштаб",
+    items: [
+      "Приобретение дополнительного оборудования для модернизации основной линии производства утеплителей",
+      "Увеличение производительности линии в три раза — охват большего числа клиентов и новые рынки",
+      "Запуск двух стегальных линий для пошива одеял",
+      "Расширение ассортимента продукции для дома и гостиничного сектора",
+    ],
+  },
+  {
+    year: "2020 – 2021",
+    label: "Полный цикл",
+    items: [
+      "Внедрение линии сублимационной печати на тканях",
+      "Организация производства трикотажных спортивных изделий",
+      "Полноценный запуск швейной фабрики с автоматизированными линиями",
+      "Налаживание производства специализированной утеплённой одежды для различных отраслей",
+    ],
+  },
+  {
+    year: "2023",
+    label: "2EASY",
+    items: [
+      "Расширение производственных мощностей на дополнительные 200 м²",
+      "Увеличение объёмов выпуска и подготовка к освоению новых рынков",
+      "Запуск трикотажной молодёжной одежды под брендом 2EASY",
+    ],
+  },
+  {
+    year: "2024 и далее",
+    label: "Вперёд",
+    items: [
+      "Планы по дальнейшему расширению, совершенствованию технологий и укреплению позиций на рынке Казахстана и за его пределами",
+    ],
+  },
+];
 
 const CITIES = [
   { id: "astana", name: "Астана", x: 578.8, y: 170.9, major: true },
@@ -69,7 +151,7 @@ function DeliveryRoutes({ view }: { view: MapViewBox }) {
               key={city.id}
               d={`M${SHYMKENT.x} ${SHYMKENT.y} Q${midX} ${midY} ${city.x} ${city.y}`}
               fill="none"
-              stroke="#1f9e96"
+              stroke="var(--accent)"
               strokeOpacity="0.38"
               strokeWidth="1.35"
               strokeLinecap="round"
@@ -99,14 +181,14 @@ function KazakhstanSvg({
     >
       <defs>
         <linearGradient id={`${uid}-fill`} x1="12%" y1="8%" x2="88%" y2="92%">
-          <stop offset="0%" stopColor="#1f9e96" stopOpacity="0.2" />
-          <stop offset="50%" stopColor="#1f9e96" stopOpacity="0.1" />
-          <stop offset="100%" stopColor="#210e03" stopOpacity="0.05" />
+          <stop offset="0%" stopColor="var(--accent)" stopOpacity="0.2" />
+          <stop offset="50%" stopColor="var(--accent)" stopOpacity="0.1" />
+          <stop offset="100%" stopColor="var(--ink)" stopOpacity="0.05" />
         </linearGradient>
         <linearGradient id={`${uid}-stroke`} x1="0%" y1="50%" x2="100%" y2="50%">
-          <stop offset="0%" stopColor="#1f9e96" stopOpacity="0.4" />
-          <stop offset="45%" stopColor="#1f9e96" stopOpacity="0.95" />
-          <stop offset="100%" stopColor="#1f9e96" stopOpacity="0.45" />
+          <stop offset="0%" stopColor="var(--accent)" stopOpacity="0.4" />
+          <stop offset="45%" stopColor="var(--accent)" stopOpacity="0.95" />
+          <stop offset="100%" stopColor="var(--accent)" stopOpacity="0.45" />
         </linearGradient>
         <filter id={`${uid}-soft`} x="-8%" y="-8%" width="116%" height="116%">
           <feGaussianBlur in="SourceAlpha" stdDeviation="6" result="b" />
@@ -120,8 +202,8 @@ function KazakhstanSvg({
           </feMerge>
         </filter>
         <radialGradient id={`${uid}-glow`} cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stopColor="#1f9e96" stopOpacity="0.5" />
-          <stop offset="100%" stopColor="#1f9e96" stopOpacity="0" />
+          <stop offset="0%" stopColor="var(--accent)" stopOpacity="0.5" />
+          <stop offset="100%" stopColor="var(--accent)" stopOpacity="0" />
         </radialGradient>
       </defs>
 
@@ -130,7 +212,7 @@ function KazakhstanSvg({
         cy="290"
         rx="420"
         ry="220"
-        fill="#1f9e96"
+        fill="var(--accent)"
         opacity="0.045"
       />
 
@@ -151,15 +233,15 @@ function KazakhstanSvg({
             cx={city.x}
             cy={city.y}
             r={city.major ? 5 : 3.75}
-            fill="#f7f5f0"
-            stroke="#1f9e96"
+            fill="var(--surface)"
+            stroke="var(--accent)"
             strokeWidth="1.5"
           />
           <text
             x={city.x}
             y={city.y - (city.major ? 14 : 11)}
             textAnchor="middle"
-            fill="#6d635c"
+            fill="var(--muted)"
             fontSize={city.major ? 13 : 11}
             fontWeight="500"
             style={{ fontFamily: "var(--font-geist-sans), sans-serif" }}
@@ -182,7 +264,7 @@ function KazakhstanSvg({
           cy={SHYMKENT.y}
           r="28"
           fill="none"
-          stroke="#1f9e96"
+          stroke="var(--accent)"
           strokeWidth="1.6"
           strokeOpacity="0.5"
           className="hq-ring"
@@ -211,7 +293,7 @@ function FactoryPin({
       className="absolute z-10 flex size-14 -translate-x-1/2 -translate-y-1/2 items-center justify-center sm:size-[4.5rem]"
       style={{ left: `${left}%`, top: `${top}%` }}
     >
-      <span className="relative size-11 overflow-hidden rounded-full bg-accent shadow-[0_10px_28px_rgba(31,158,150,0.35)] ring-[3px] ring-white transition-transform hover:scale-105 sm:size-14">
+      <span className="shadow-accent-btn relative size-11 overflow-hidden rounded-full bg-accent ring-[3px] ring-white transition-transform hover:scale-105 sm:size-14">
         <Image
           src={FACTORY_PHOTO}
           alt=""
@@ -243,7 +325,7 @@ function FactoryCard({
           : "absolute inset-x-auto left-5 bottom-5 z-20 flex w-[min(100%,340px)] gap-3 rounded-2xl border border-ink/8 bg-white/95 p-2.5 text-left shadow-[0_16px_40px_rgba(33,14,3,0.16)] backdrop-blur-md"
       }
     >
-      <span className="relative h-[68px] w-[80px] shrink-0 overflow-hidden rounded-xl bg-[#eaf6f4] sm:h-[84px] sm:w-[104px]">
+      <span className="relative h-[68px] w-[80px] shrink-0 overflow-hidden rounded-xl bg-wash sm:h-[84px] sm:w-[104px]">
         <Image
           src={FACTORY_PHOTO}
           alt=""
@@ -280,7 +362,7 @@ function MapCanvas({
   showOverlayCard?: boolean;
 }) {
   return (
-    <div className="relative aspect-[960/560] w-full overflow-hidden bg-[#efebe3]">
+    <div className="relative aspect-[960/560] w-full overflow-hidden bg-canvas-2">
       <KazakhstanSvg view={FULL_VIEW} uid={showOverlayCard ? "kz-d" : "kz-m"} />
       <FactoryPin view={FULL_VIEW} onOpen={onOpenFactory} />
       {showOverlayCard ? <FactoryCard onOpen={onOpenFactory} /> : null}
@@ -291,6 +373,7 @@ function MapCanvas({
 function FactoryPanel({ onClose }: { onClose: () => void }) {
   const [panelSettled, setPanelSettled] = useState(false);
   const [imageZoomed, setImageZoomed] = useState(false);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   const {
     panelRef,
@@ -362,12 +445,15 @@ function FactoryPanel({ onClose }: { onClose: () => void }) {
           </button>
         </header>
 
-        <div className="min-h-0 flex-1 overflow-y-scroll overscroll-y-contain px-4 py-3 [-webkit-overflow-scrolling:touch] [touch-action:pan-y] sm:px-5 sm:py-4">
+        <div
+          ref={scrollRef}
+          className="min-h-0 flex-1 overflow-y-scroll overscroll-y-contain px-4 py-3 [-webkit-overflow-scrolling:touch] [touch-action:pan-y] sm:px-5 sm:py-4"
+        >
           <button
             type="button"
             onClick={() => setImageZoomed(true)}
             aria-label="Увеличить фото завода"
-            className="relative block aspect-[16/10] w-full overflow-hidden rounded-xl bg-[#eaf6f4] ring-1 ring-black/[0.06] focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none"
+            className="relative block aspect-[16/10] w-full overflow-hidden rounded-xl bg-wash ring-1 ring-black/[0.06] focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none"
           >
             <Image
               src={FACTORY_PHOTO}
@@ -389,7 +475,7 @@ function FactoryPanel({ onClose }: { onClose: () => void }) {
             и готовые изделия уходят по всему Казахстану.
           </p>
 
-          <ul className="mt-4 space-y-2.5 pb-3">
+          <ul className="mt-4 space-y-2.5 pb-2">
             {[
               "Линейки Teksulate, UniFiber и стёжка — с одной площадки",
               "Склад на месте: отгружаем объём без перекупщиков",
@@ -408,6 +494,25 @@ function FactoryPanel({ onClose }: { onClose: () => void }) {
               </li>
             ))}
           </ul>
+
+          {/* История — строго после блока про завод */}
+          <div className="mt-10 border-t border-black/[0.06] pt-8 pb-4">
+            <p className="text-[11px] font-semibold tracking-[0.12em] text-accent uppercase">
+              С 2008 года
+            </p>
+            <h4 className="mt-1 font-display text-[18px] font-semibold tracking-[-0.03em] text-ink sm:text-[20px]">
+              История компании
+            </h4>
+            <p className="mt-1.5 text-[13px] leading-relaxed text-muted">
+              От первой линии утеплителей до полного цикла — материалы, стёжка
+              и пошив.
+            </p>
+
+            <CompanyHistoryTimeline
+              periods={COMPANY_HISTORY}
+              scrollRef={scrollRef}
+            />
+          </div>
         </div>
 
         <div className="relative z-10 shrink-0 border-t border-black/[0.06] bg-white px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom,0px))] sm:px-5 sm:pb-4">
@@ -415,7 +520,7 @@ function FactoryPanel({ onClose }: { onClose: () => void }) {
             href={WA_FACTORY}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-accent px-4 py-3 text-[14px] font-semibold text-white shadow-[0_6px_18px_rgba(31,158,150,0.28)] transition-opacity hover:opacity-95"
+            className="shadow-accent-btn inline-flex w-full items-center justify-center gap-2 rounded-full bg-accent px-4 py-3 text-[14px] font-semibold text-white transition-opacity hover:opacity-95"
           >
             Написать заводу
             <span aria-hidden>→</span>
@@ -461,11 +566,11 @@ export function DeliveryMap() {
   return (
     <section
       id="about"
-      className="relative bg-[#f7f5f0] py-14 text-ink sm:px-[30px] sm:py-20"
+      className="relative bg-surface py-14 text-ink sm:px-[30px] sm:py-20"
     >
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 overflow-hidden bg-[radial-gradient(ellipse_at_72%_38%,rgba(31,158,150,0.12),transparent_52%),radial-gradient(ellipse_at_12%_85%,rgba(33,14,3,0.04),transparent_48%)]"
+        className="accent-veil-map pointer-events-none absolute inset-0 overflow-hidden"
       />
 
       <div className="relative mx-auto max-w-[1280px]">
