@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { BrandPhotoWall } from "@/components/brand-photo-wall";
 import { BrandsClients, BrandsCollaborate } from "@/components/brands-proof";
 import { BrandsGallery } from "@/components/brands-gallery";
 import { DeliveryMap } from "@/components/delivery-map";
@@ -30,7 +31,7 @@ export default function BrandsPage() {
         cta={{ label: "Заказать пошив", href: WA_SEWING }}
       />
       <Hero
-        backgroundSrc="/brands_hero_background.mp4"
+        background={<BrandPhotoWall priority />}
         eyebrow="Пошив одежды · Шымкент · с 2008"
         title="Шьём любую одежду под любой бренд"
         description={

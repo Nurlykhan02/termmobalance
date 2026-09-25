@@ -19,25 +19,25 @@ type Photo = {
  */
 const PHOTOS: Photo[] = [
   {
-    src: "/images/apparel/kurtki/variant-1/01.jpg",
-    alt: "Утеплённая куртка с вышивкой",
+    src: "/images/photos-brands/brand_4.jpg",
+    alt: "Образ в полный рост на капоте",
     place: "col-start-1 row-start-1 row-span-3 lg:row-span-3",
     sizes: "(max-width: 1024px) 50vw, 22vw",
-    fit: "object-[center_28%]",
+    fit: "object-[center_58%]",
     from: "up",
   },
   {
-    src: "/images/apparel/kurtki/variant-2/01.jpg",
-    alt: "Зимняя куртка под бренд",
+    src: "/images/photos-brands/brand_2.jpg",
+    alt: "Оверсайз футболка с принтом",
     place:
       "col-span-2 col-start-1 row-start-4 row-span-2 lg:col-span-2 lg:col-start-2 lg:row-start-1 lg:row-span-2",
     sizes: "(max-width: 1024px) 100vw, 48vw",
-    fit: "object-[center_32%]",
+    fit: "object-[center_34%]",
     from: "up",
   },
   {
-    src: "/images/apparel/zhilety/variant-1/01.jpg",
-    alt: "Жилет с вышивкой",
+    src: "/images/photos-brands/brand_7.jpg",
+    alt: "Чёрная футболка с принтом",
     place:
       "col-start-2 row-start-1 row-span-2 lg:col-start-4 lg:row-start-1 lg:row-span-2",
     sizes: "(max-width: 1024px) 50vw, 22vw",
@@ -45,48 +45,48 @@ const PHOTOS: Photo[] = [
     from: "down",
   },
   {
-    src: "/images/apparel/zhilety/variant-2/01.jpg",
-    alt: "Жилет с нашивкой",
+    src: "/images/photos-brands/brand_3.jpg",
+    alt: "Принт на спине футболки",
     place:
       "col-start-2 row-start-3 row-span-1 lg:col-start-2 lg:row-start-3 lg:row-span-1",
     sizes: "(max-width: 1024px) 50vw, 22vw",
-    fit: "object-[center_34%]",
+    fit: "object-[center_32%]",
     from: "down",
   },
   {
-    src: "/images/apparel/kurtki/variant-1/02.jpg",
-    alt: "Деталь вышивки на куртке",
+    src: "/images/photos-brands/brand_5.jpg",
+    alt: "Крупный план принта на футболке",
     place:
       "col-span-2 col-start-1 row-start-6 row-span-1 lg:col-span-2 lg:col-start-3 lg:row-start-3 lg:row-span-1",
     sizes: "(max-width: 1024px) 100vw, 48vw",
-    fit: "object-[center_36%]",
+    fit: "object-[center_34%]",
     from: "up",
   },
   {
-    src: "/images/apparel/kurtki/variant-2/05.jpg",
-    alt: "Готовая куртка серии",
+    src: "/images/photos-brands/brand_8.jpg",
+    alt: "Принт на спине чёрной футболки",
     place:
       "col-start-1 row-start-7 row-span-1 lg:col-span-2 lg:col-start-1 lg:row-start-4 lg:row-span-1",
     sizes: "(max-width: 1024px) 50vw, 48vw",
-    fit: "object-[center_34%]",
+    fit: "object-[center_42%]",
     from: "down",
   },
   {
-    src: "/images/apparel/kurtki/variant-1/05.jpg",
-    alt: "Комплект одежды с логотипом",
+    src: "/images/photos-brands/brand_6.jpg",
+    alt: "Футболка с принтом на спине",
     place:
       "col-start-2 row-start-7 row-span-1 lg:col-start-3 lg:row-start-4 lg:row-span-1",
     sizes: "(max-width: 1024px) 50vw, 22vw",
-    fit: "object-[center_32%]",
+    fit: "object-[center_30%]",
     from: "up",
   },
   {
-    src: "/images/apparel/zhilety/variant-1/02.jpg",
-    alt: "Вышивка на жилете",
+    src: "/images/photos-brands/brand_1.jpg",
+    alt: "Ночная съёмка комплекта у машины",
     place:
       "col-span-2 col-start-1 row-start-8 row-span-1 lg:col-span-1 lg:col-start-4 lg:row-start-4 lg:row-span-1",
     sizes: "(max-width: 1024px) 100vw, 22vw",
-    fit: "object-[center_34%]",
+    fit: "object-[center_62%]",
     from: "down",
   },
 ];

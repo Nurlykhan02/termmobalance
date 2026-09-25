@@ -23,12 +23,14 @@ const ACTION_CLASS: Record<HeroAction["tone"], string> = {
 };
 
 export function Hero({
+  background,
   backgroundSrc,
   eyebrow = "Шымкент · свой завод · с 2008",
   title = "Утеплители и наполнители для текстиля",
   description,
   actions = HOME_ACTIONS,
 }: {
+  background?: ReactNode;
   backgroundSrc?: string;
   eyebrow?: string;
   title?: string;
@@ -46,7 +48,7 @@ export function Hero({
 
   return (
     <section className="relative isolate min-h-[100svh] overflow-hidden bg-background">
-      <HeroBackground src={backgroundSrc} />
+      {background ?? <HeroBackground src={backgroundSrc} />}
 
       <div className="mx-auto flex min-h-[100svh] max-w-[1380px] flex-col justify-end px-4 pt-24 pb-8 sm:px-[30px] sm:pb-12 lg:pb-14">
         <div className="max-w-[600px] rounded-2xl border border-white/10 bg-black/42 p-4 shadow-[0_8px_40px_rgba(0,0,0,0.3)] backdrop-blur-md sm:max-w-[640px] sm:p-6 lg:p-7">
