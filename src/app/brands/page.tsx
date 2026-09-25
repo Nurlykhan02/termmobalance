@@ -1,4 +1,7 @@
 import type { Metadata } from "next";
+import { BrandsClients, BrandsCollaborate } from "@/components/brands-proof";
+import { BrandsGallery } from "@/components/brands-gallery";
+import { DeliveryMap } from "@/components/delivery-map";
 import { Hero } from "@/components/hero";
 import { SiteHeader } from "@/components/site-header";
 
@@ -47,6 +50,10 @@ export default function BrandsPage() {
           },
         ]}
       />
+      <BrandsCollaborate />
+      <BrandsClients />
+      <BrandsGallery />
+      <DeliveryMap />
     </main>
   );
 }
