@@ -1,138 +1,125 @@
 import Image from "next/image";
 import Link from "next/link";
+import { ButtonLink } from "@/components/ui/button-link";
+import { Reveal } from "@/components/ui/reveal";
+import { SpecLabel } from "@/components/ui/spec-label";
 import { asset } from "@/lib/asset";
+import { CAPSULES, shotByNumber } from "@/lib/brands-content";
 
-type Tile = {
-  id: string;
-  src: string;
-  caption: string;
-  span: "hero" | "wide" | "square";
-};
+/** Lilac, blue and black capsules — one frame each. */
+const FRAMES = [4, 20, 7].map(shotByNumber);
 
-const TILES: Tile[] = [
-  {
-    id: "1",
-    src: asset("/images/apparel/kurtki/variant-1/01.jpg"),
-    caption: "Худи и трикотаж под бренд",
-    span: "hero",
-  },
-  {
-    id: "2",
-    src: asset("/images/apparel/kurtki/variant-1/02.jpg"),
-    caption: "Серийный пошив",
-    span: "wide",
-  },
-  {
-    id: "3",
-    src: asset("/images/apparel/kurtki/variant-1/03.jpg"),
-    caption: "Футболки",
-    span: "square",
-  },
-  {
-    id: "4",
-    src: asset("/images/apparel/kurtki/variant-1/04.jpg"),
-    caption: "Свитшоты",
-    span: "square",
-  },
-  {
-    id: "5",
-    src: asset("/images/apparel/kurtki/variant-2/01.jpg"),
-    caption: "Lookbook / примерка",
-    span: "wide",
-  },
-  {
-    id: "6",
-    src: asset("/images/apparel/zhilety/variant-1/01.jpg"),
-    caption: "Детали и вышивка",
-    span: "square",
-  },
-  {
-    id: "7",
-    src: asset("/images/apparel/zhilety/variant-2/01.jpg"),
-    caption: "Готовый тираж",
-    span: "square",
-  },
+const CAPSULE_LABEL = Object.fromEntries(
+  CAPSULES.map((item) => [item.id, item.label]),
+);
+
+const TERMS = [
+  { value: "от 50 шт", label: "тираж" },
+  { value: "3–5 дней", label: "сэмпл" },
+  { value: "от 14 дней", label: "партия" },
 ];
 
-function spanClass(span: Tile["span"]) {
-  switch (span) {
-    case "hero":
-      return "col-span-2 row-span-2";
-    case "wide":
-      return "col-span-2";
-    default:
-      return "col-span-1";
-  }
-}
-
-function GalleryTile({ tile }: { tile: Tile }) {
-  return (
-    <Link
-      href="/brands/"
-      className={`group relative min-h-[160px] overflow-hidden rounded-[1.25rem] bg-ink sm:min-h-[200px] ${spanClass(tile.span)} ${
-        tile.span === "hero"
-          ? "min-h-[280px] sm:min-h-[360px] md:min-h-[480px]"
-          : tile.span === "wide"
-            ? "min-h-[180px] sm:min-h-[200px] md:min-h-[230px]"
-            : "md:min-h-[230px]"
-      }`}
-    >
-      <Image
-        src={tile.src}
-        alt=""
-        fill
-        sizes={
-          tile.span === "hero"
-            ? "(max-width: 768px) 100vw, 50vw"
-            : tile.span === "wide"
-              ? "(max-width: 768px) 100vw, 50vw"
-              : "(max-width: 768px) 50vw, 25vw"
-        }
-        className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
-      />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-transparent opacity-100 transition-opacity duration-300 md:opacity-0 md:group-hover:opacity-100" />
-      <div className="absolute inset-x-0 bottom-0 flex translate-y-0 flex-col items-start gap-2.5 p-4 opacity-100 transition-all duration-300 sm:gap-3 sm:p-5 md:translate-y-2 md:opacity-0 md:group-hover:translate-y-0 md:group-hover:opacity-100">
-        <p className="text-[13px] font-medium tracking-[-0.01em] text-white sm:text-[14px]">
-          {tile.caption}
-        </p>
-        <span className="inline-flex items-center rounded-full bg-white px-3.5 py-1.5 text-[12px] font-semibold text-ink sm:px-4 sm:py-2 sm:text-[13px]">
-          Подробнее →
-        </span>
-      </div>
-    </Link>
-  );
-}
-
-export function EasyBrand() {
+/** Teaser for /brands/ in the studio register, so the switch of worlds is visible. */
+export function EasyBrand({ index }: { index?: string } = {}) {
   return (
     <section
       id="easy"
-      className="relative overflow-hidden bg-surface px-4 py-14 text-ink sm:px-[30px] sm:py-20"
+      className="theme-studio section-y relative isolate overflow-hidden"
     >
       <div
         aria-hidden
-        className="accent-veil pointer-events-none absolute inset-x-0 top-0 h-64"
+        className="absolute inset-0 -z-10 bg-[radial-gradient(60%_50%_at_75%_40%,color-mix(in_oklab,var(--accent)_16%,transparent),transparent_70%)]"
       />
-
-      <div className="relative mx-auto max-w-[1280px]">
-        <div className="mx-auto max-w-[640px] text-center">
-          <p className="font-mono text-[11px] font-medium tracking-[0.14em] text-muted uppercase sm:text-[12px]">
-            Производство одежды
-          </p>
-          <h2 className="font-display mt-3 text-[clamp(1.7rem,4.2vw,3.1rem)] leading-[1.08] font-semibold tracking-[-0.035em]">
+      <div className="container-x grid gap-12 lg:grid-cols-12 lg:items-center lg:gap-6">
+        <div className="lg:col-span-5">
+          <SpecLabel className="text-ink/80">
+            {index ? <span className="text-accent">({index})</span> : null}
+            Пошив для брендов
+          </SpecLabel>
+          <h2 className="mt-5 font-display text-[clamp(2.5rem,5.4vw,5.25rem)] leading-[0.95] font-semibold tracking-[-0.045em] text-balance text-ink">
             Шьём одежду под ваш бренд
           </h2>
-          <p className="mt-3 text-[14px] leading-relaxed text-muted sm:text-[16px]">
-            Футболки, худи, свитшоты и другой трикотаж на заказ — под любой бренд
-            со своего производства.
+          <p className="mt-6 max-w-[40ch] text-lead text-ink/80">
+            Футболки, худи, свитшоты и другой трикотаж на заказ — со своего
+            производства. Пример — наш собственный бренд{" "}
+            <span className="text-accent">2EASY</span>.
           </p>
+
+          <dl className="mt-10 grid max-w-md grid-cols-3 border-y border-line">
+            {TERMS.map((term) => (
+              <div
+                key={term.label}
+                className="border-line py-4 not-first:border-l not-first:pl-4"
+              >
+                <dt className="font-mono text-label text-muted uppercase">
+                  {term.label}
+                </dt>
+                <dd className="mt-1.5 font-display text-[1.25rem] font-semibold text-ink">
+                  {term.value}
+                </dd>
+              </div>
+            ))}
+          </dl>
+
+          <div className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-4">
+            <ButtonLink href="/brands/" variant="light">
+              Смотреть работы
+            </ButtonLink>
+            <ButtonLink
+              href="/brands/#contact"
+              variant="text"
+              className="text-ink decoration-ink/40"
+            >
+              Бриф на пошив
+            </ButtonLink>
+          </div>
         </div>
 
-        <div className="mt-10 grid grid-cols-2 gap-3 sm:mt-12 sm:gap-4 md:grid-cols-4 md:grid-rows-[repeat(3,minmax(0,1fr))]">
-          {TILES.map((tile) => (
-            <GalleryTile key={tile.id} tile={tile} />
+        <ul className="grid grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-4 lg:col-span-7">
+          {FRAMES.map((shot, i) => (
+            <li
+              key={shot.n}
+              className={
+                i === 0
+                  ? "col-span-2 sm:col-span-1"
+                  : i === 1
+                    ? "sm:pt-16"
+                    : "sm:pt-8"
+              }
+            >
+              <Reveal variant="clip" delay={i * 120}>
+                <Link
+                  href="/brands/#work"
+                  className={`group relative block overflow-hidden bg-raised ${
+                    i === 0 ? "aspect-[4/3] sm:aspect-[3/4]" : "aspect-[3/4]"
+                  }`}
+                  aria-label={`Лукбук 2EASY: ${shot.alt}`}
+                >
+                  <Image
+                    src={asset(shot.src)}
+                    alt={shot.alt}
+                    fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 33vw, 22vw"
+                    className="object-cover transition-transform duration-700 ease-out-soft group-hover:scale-[1.04]"
+                    style={{ objectPosition: shot.focus }}
+                  />
+                  <span
+                    aria-hidden
+                    className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/80 to-transparent"
+                  />
+                  <span className="absolute inset-x-3 bottom-3 flex items-end justify-between gap-2">
+                    <SpecLabel className="text-[#ede6da]">
+                      {CAPSULE_LABEL[shot.capsule]}
+                    </SpecLabel>
+                    <SpecLabel className="text-[#ede6da]/70 max-sm:hidden">
+                      No. {String(shot.n).padStart(2, "0")}
+                    </SpecLabel>
+                  </span>
+                </Link>
+              </Reveal>
+            </li>
           ))}
-        </div>
+        </ul>
       </div>
     </section>
   );

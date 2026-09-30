@@ -59,31 +59,27 @@ function Swatch({
 }
 
 export function PaletteSwitcher() {
-  const titleId = useId();
   const pathname = usePathname();
   const brands = pathname.includes("/brands");
+  return <PaletteSwitcherPanel key={brands ? "brands" : "factory"} brands={brands} />;
+}
+
+function PaletteSwitcherPanel({ brands }: { brands: boolean }) {
+  const titleId = useId();
   const storageKey = brands ? BRANDS_PALETTE_STORAGE_KEY : PALETTE_STORAGE_KEY;
   const accents = brands ? BRANDS_ACCENT_PRESETS : ACCENT_PRESETS;
   const surfaces = brands ? BRANDS_SURFACE_PRESETS : SURFACE_PRESETS;
   const backgrounds = brands ? BRANDS_BACKGROUND_PRESETS : BACKGROUND_PRESETS;
   const fallback = brands ? BRANDS_DEFAULT_PALETTE : DEFAULT_PALETTE;
-  const [open, setOpen] = useState(true);
-  const [palette, setPalette] = useState<Palette>(fallback);
+  const [open, setOpen] = useState(false);
+  const [picked, setPicked] = useState<Palette | null>(null);
+  const palette = picked ?? fallback;
 
   useEffect(() => {
     const stored = readStoredPalette(storageKey);
-    if (stored) {
-      setPalette(stored);
-      applyPalette(stored);
-      return;
-    }
-    setPalette(fallback);
-    if (brands) {
-      applyPalette(fallback);
-      return;
-    }
-    clearPalette();
-  }, [brands, fallback, storageKey]);
+    if (stored) applyPalette(stored);
+    else clearPalette();
+  }, [storageKey]);
 
   useEffect(() => {
     if (!open) return;
@@ -97,19 +93,20 @@ export function PaletteSwitcher() {
   }, [open]);
 
   function commit(next: Palette) {
-    setPalette(next);
+    setPicked(next);
     applyPalette(next);
     storePalette(next, storageKey);
   }
 
   function reset() {
     resetStoredPalette(storageKey);
-    setPalette(fallback);
-    if (brands) {
-      applyPalette(fallback);
-      return;
-    }
+    setPicked(null);
     clearPalette();
+  }
+
+  function toggle() {
+    if (!open) setPicked(readStoredPalette(storageKey));
+    setOpen((value) => !value);
   }
 
   return (
@@ -252,7 +249,7 @@ export function PaletteSwitcher() {
 
       <button
         type="button"
-        onClick={() => setOpen((value) => !value)}
+        onClick={toggle}
         aria-expanded={open}
         aria-controls={open ? titleId : undefined}
         className="pointer-events-auto inline-flex items-center gap-2 rounded-full bg-surface px-3 py-2 text-[12px] font-semibold text-ink shadow-[0_10px_28px_rgba(33,14,3,0.16)] ring-1 ring-ink/10"

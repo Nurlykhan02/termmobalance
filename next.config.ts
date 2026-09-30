@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { DEVICE_SIZES, IMAGE_SIZES } from "./image-config.mjs";
 
 /** GitHub Pages project site: https://<user>.github.io/termmobalance/ */
 const repo = "termmobalance";
@@ -14,7 +15,10 @@ const nextConfig: NextConfig = {
       }
     : {}),
   images: {
-    unoptimized: true,
+    loader: "custom",
+    loaderFile: "./src/lib/image-loader.ts",
+    deviceSizes: DEVICE_SIZES,
+    imageSizes: IMAGE_SIZES,
   },
   trailingSlash: true,
   devIndicators: false,

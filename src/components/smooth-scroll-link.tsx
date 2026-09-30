@@ -8,15 +8,18 @@ function easeInOutCubic(t: number) {
 
 function smoothScrollTo(element: HTMLElement, duration = 520) {
   const startY = window.scrollY;
-  const targetY =
-    element.getBoundingClientRect().top + window.scrollY - 12;
+  const offset = parseFloat(getComputedStyle(element).scrollMarginTop) || 12;
+  const targetY = element.getBoundingClientRect().top + window.scrollY - offset;
   const distance = targetY - startY;
   const startTime = performance.now();
 
   function step(now: number) {
     const elapsed = now - startTime;
     const progress = Math.min(1, elapsed / duration);
-    window.scrollTo(0, startY + distance * easeInOutCubic(progress));
+    window.scrollTo({
+      top: startY + distance * easeInOutCubic(progress),
+      behavior: "instant",
+    });
     if (progress < 1) requestAnimationFrame(step);
   }
 

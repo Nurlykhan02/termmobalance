@@ -2,9 +2,10 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { asset } from "@/lib/asset";
 import { SmoothScrollLink } from "@/components/smooth-scroll-link";
+import { Icon } from "@/components/ui/icon";
 
 type HeaderLink = {
   label: string;
@@ -15,6 +16,7 @@ const HOME_LINKS: HeaderLink[] = [
   { label: "Спецодежда", href: "#apparel" },
   { label: "Материалы", href: "#catalog" },
   { label: "Доставка", href: "#about" },
+  { label: "Пошив для брендов", href: "/brands/" },
   { label: "Контакты", href: "#contact" },
 ];
 
@@ -63,163 +65,152 @@ function NavItem({
   );
 }
 
-function BrandMark() {
+function BrandMark({ light }: { light: boolean }) {
   return (
-    <span className="flex items-center gap-2.5">
-      <span
-        aria-hidden
-        className="size-[28px] shrink-0 rounded-full border-[1.5px] border-accent"
-      />
-      <span className="flex flex-col leading-none">
-        <span className="text-[11px] font-bold tracking-[0.14em] text-ink uppercase">
-          Termmo
-        </span>
-        <span className="text-[11px] font-bold tracking-[0.14em] text-ink uppercase">
-          Balance
-        </span>
-      </span>
-    </span>
+    <Image
+      src={asset("/images/logo.png")}
+      alt="Termmo Balance"
+      width={1024}
+      height={252}
+      preload
+      className={`h-[22px] w-auto transition-[filter] duration-300 sm:h-[24px] ${
+        light ? "brightness-0 invert-[0.92]" : ""
+      }`}
+    />
   );
 }
 
+function useScrolled(offset = 24) {
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > offset);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [offset]);
+
+  return scrolled;
+}
+
+/**
+ * Fixed bar, clear over the full-bleed hero and solid after scroll.
+ * `studio` sits on a dark page, so its text stays light in both states;
+ * the factory page turns dark-on-paper once solid.
+ */
 export function SiteHeader({
   links = HOME_LINKS,
   logoHref = "/",
   cta = HOME_CTA,
   whatsappHref = "https://wa.me/77781200084",
+  variant = "default",
 }: {
   links?: HeaderLink[];
   logoHref?: string;
   cta?: HeaderLink;
   whatsappHref?: string;
+  variant?: "default" | "studio";
 } = {}) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const scrolled = useScrolled();
+  const solid = scrolled || menuOpen;
+  const studio = variant === "studio";
+  const light = studio || !solid;
+
+  const text = light ? "text-white" : "text-ink";
+  const navText = light
+    ? "text-white/75 hover:text-white"
+    : "text-ink/70 hover:text-ink";
+  const ctaClass = light
+    ? "bg-[#f4f0ea] text-[#0e0d0c] hover:bg-white"
+    : "bg-ink text-surface hover:bg-ink/85";
 
   return (
-    <header className="pointer-events-none absolute inset-x-0 top-0 z-50 px-4 pt-4 sm:px-[30px] sm:pt-6">
-      <div className="pointer-events-auto mx-auto flex max-w-[1380px] items-center justify-between gap-3 lg:hidden">
-        <Link
-          href={logoHref}
-          aria-label="Termmo Balance"
-          className="inline-flex shrink-0 items-center rounded-[12px] bg-surface px-3.5 py-2.5"
-        >
-          <BrandMark />
+    <header
+      className={`fixed inset-x-0 top-0 z-50 border-b transition-colors duration-300 ${
+        solid
+          ? `border-line backdrop-blur-md ${studio ? "bg-background/90" : "bg-surface/92"}`
+          : "border-transparent bg-transparent"
+      }`}
+    >
+      <div className={`container-x flex h-16 items-center justify-between gap-6 ${text}`}>
+        <Link href={logoHref} aria-label="Termmo Balance" className="flex h-11 shrink-0 items-center">
+          <BrandMark light={light} />
         </Link>
 
-        <button
-          type="button"
-          aria-label={menuOpen ? "Закрыть меню" : "Открыть меню"}
-          aria-expanded={menuOpen}
-          onClick={() => setMenuOpen((open) => !open)}
-          className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-[12px] bg-surface text-ink"
-        >
-          <span className="flex w-[18px] flex-col gap-[5px]">
-            <span
-              className={`block h-px w-full origin-center bg-ink transition-transform ${menuOpen ? "translate-y-[6px] rotate-45" : ""}`}
-            />
-            <span
-              className={`block h-px w-full bg-ink transition-opacity ${menuOpen ? "opacity-0" : ""}`}
-            />
-            <span
-              className={`block h-px w-full origin-center bg-ink transition-transform ${menuOpen ? "-translate-y-[6px] -rotate-45" : ""}`}
-            />
-          </span>
-        </button>
-      </div>
+        <nav aria-label="Разделы" className="hidden items-center gap-7 lg:flex">
+          {links.map((link) => (
+            <NavItem
+              key={link.href}
+              href={link.href}
+              className={`flex h-11 items-center text-[14px] transition-colors ${navText}`}
+            >
+              {link.label}
+            </NavItem>
+          ))}
+        </nav>
 
-      <div className="pointer-events-auto mx-auto hidden max-w-[1380px] items-center justify-center lg:flex">
-        <div className="flex min-w-[820px] items-center justify-between rounded-[12px] bg-surface py-[9px] pr-2 pl-5">
-          <div className="flex items-center gap-5">
-            <Link href={logoHref} aria-label="Termmo Balance" className="shrink-0">
-              <BrandMark />
-            </Link>
-
-            <span aria-hidden className="h-[25px] w-px bg-ink/10" />
-
-            <nav className="flex items-center gap-5">
-              {links.map((link) => (
-                <NavItem
-                  key={link.href}
-                  href={link.href}
-                  className="text-[12px] font-medium text-muted transition-colors hover:text-ink"
-                >
-                  {link.label}
-                </NavItem>
-              ))}
-            </nav>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <a
+        <div className="flex items-center gap-2">
+          {studio ? null : (
+            <NavItem
               href={whatsappHref}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center rounded-full border border-ink/15 px-4 py-2 text-[12px] font-medium text-ink transition-colors hover:bg-ink/5"
+              className={`hidden h-11 items-center px-3 text-[13px] font-medium transition-colors xl:inline-flex ${navText}`}
             >
               WhatsApp
-            </a>
-
-            <NavItem
-              href={cta.href}
-              className="inline-flex items-center gap-2 rounded-full bg-ink px-4 py-2 text-[12px] font-medium text-white transition-opacity hover:opacity-90"
-            >
-              {cta.label}
-              <Image
-                src={asset("/images/arrow.svg")}
-                alt=""
-                width={16}
-                height={16}
-                className="brightness-0 invert"
-              />
             </NavItem>
-          </div>
+          )}
+          <NavItem
+            href={cta.href}
+            className={`hidden h-11 items-center gap-2 rounded-[var(--radius)] px-4 text-[13px] font-medium transition-colors sm:inline-flex ${ctaClass}`}
+          >
+            {cta.label}
+            <Icon name="arrow-up-right" className="size-4" />
+          </NavItem>
+          <button
+            type="button"
+            aria-label={menuOpen ? "Закрыть меню" : "Открыть меню"}
+            aria-expanded={menuOpen}
+            onClick={() => setMenuOpen((open) => !open)}
+            className="flex size-11 items-center justify-center lg:hidden"
+          >
+            <Icon name={menuOpen ? "close" : "plus"} className="size-6" />
+          </button>
         </div>
       </div>
 
       {menuOpen ? (
-        <div className="pointer-events-auto mx-auto mt-3 max-w-[1380px] lg:hidden">
-          <nav className="overflow-hidden rounded-[16px] bg-surface shadow-[0_12px_40px_rgba(0,0,0,0.12)]">
-            <div className="px-1 py-1">
-              {links.map((link) => (
-                <NavItem
-                  key={link.href}
-                  href={link.href}
-                  onClick={() => setMenuOpen(false)}
-                  className="flex min-h-11 items-center rounded-[12px] px-4 text-[14px] font-medium tracking-[-0.01em] text-ink/80 transition-colors hover:bg-ink/5 hover:text-ink active:bg-ink/5"
-                >
-                  {link.label}
-                </NavItem>
-              ))}
-            </div>
-
-            <div className="flex flex-col gap-2 border-t border-ink/8 px-4 py-3.5">
-              <NavItem
-                href={cta.href}
-                onClick={() => setMenuOpen(false)}
-                className="inline-flex min-h-10 items-center justify-center gap-2 rounded-full bg-ink px-4 text-[13px] font-medium text-white"
-              >
-                {cta.label}
-                <Image
-                  src={asset("/images/arrow.svg")}
-                  alt=""
-                  width={14}
-                  height={14}
-                  className="brightness-0 invert"
-                />
-              </NavItem>
-
-              <a
-                href={whatsappHref}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => setMenuOpen(false)}
-                className="inline-flex min-h-10 items-center justify-center rounded-full border border-ink/12 px-4 text-[13px] font-medium text-ink"
-              >
-                WhatsApp
-              </a>
-            </div>
-          </nav>
-        </div>
+        <nav
+          aria-label="Меню"
+          className="container-x max-h-[calc(100dvh-4rem)] overflow-y-auto border-t border-line pt-2 pb-6 lg:hidden"
+        >
+          {links.map((link) => (
+            <NavItem
+              key={link.href}
+              href={link.href}
+              onClick={() => setMenuOpen(false)}
+              className="flex min-h-12 items-center border-b border-line font-display text-h3 font-semibold text-ink"
+            >
+              {link.label}
+            </NavItem>
+          ))}
+          <NavItem
+            href={cta.href}
+            onClick={() => setMenuOpen(false)}
+            className="mt-6 inline-flex h-12 w-full items-center justify-center gap-2 rounded-[var(--radius)] bg-ink text-[14px] font-medium text-surface"
+          >
+            {cta.label}
+            <Icon name="arrow-up-right" className="size-4" />
+          </NavItem>
+          {studio ? null : (
+            <NavItem
+              href={whatsappHref}
+              onClick={() => setMenuOpen(false)}
+              className="mt-3 inline-flex h-12 w-full items-center justify-center rounded-[var(--radius)] border border-line text-[14px] font-medium text-ink"
+            >
+              WhatsApp
+            </NavItem>
+          )}
+        </nav>
       ) : null}
     </header>
   );

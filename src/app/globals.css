@@ -8,9 +8,28 @@
   --muted: #6d635c;
   --accent: #1f9e96;
   --raised: #ffffff;
-  --wash: color-mix(in oklab, var(--accent) 14%, white);
+  --radius: 4px;
+}
+
+/* Studio register for /brands/: night, bone, camel. */
+.theme-studio {
+  --background: #0e0d0c;
+  --foreground: #ede6da;
+  --surface: #141210;
+  --ink: #ede6da;
+  --muted: #b3aa9d;
+  --accent: #c4a574;
+  --raised: #1d1a17;
+  background: var(--background);
+  color: var(--foreground);
+}
+
+/* Derived tokens resolve where declared, so both scopes re-declare them. */
+:root,
+.theme-studio {
+  --wash: color-mix(in oklab, var(--accent) 14%, var(--raised));
   --canvas-2: color-mix(in oklab, var(--ink) 5%, var(--surface));
-  --radius: 0.75rem;
+  --line: color-mix(in oklab, var(--ink) 12%, transparent);
 }
 
 @theme inline {
@@ -23,48 +42,40 @@
   --color-raised: var(--raised);
   --color-wash: var(--wash);
   --color-canvas-2: var(--canvas-2);
-  --font-sans: var(--font-geist-sans);
-  --font-display: var(--font-unbounded);
-  --font-mono: var(--font-geist-mono);
+  --color-line: var(--line);
+  --font-sans: var(--font-manrope);
+  --font-display: var(--font-inter-tight);
+  --font-mono: var(--font-plex-mono);
   --radius-header: var(--radius);
 }
 
-@utility shadow-accent-btn {
-  box-shadow: 0 6px 18px color-mix(in oklab, var(--accent) 28%, transparent);
+@theme {
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  --text-display: clamp(2.75rem, min(7.6vw, 13svh), 8.5rem);
+  --text-display--line-height: 0.92;
+  --text-display--letter-spacing: -0.045em;
+  --text-h2: clamp(2rem, 4.4vw, 4rem);
+  --text-h2--line-height: 1;
+  --text-h2--letter-spacing: -0.035em;
+  --text-h3: clamp(1.25rem, 1.8vw, 1.625rem);
+  --text-h3--line-height: 1.15;
+  --text-h3--letter-spacing: -0.02em;
+  --text-lead: 1.125rem;
+  --text-lead--line-height: 1.6;
+  --text-label: 0.8125rem;
+  --text-label--line-height: 1.35;
+  --text-label--letter-spacing: 0.1em;
 }
 
-@utility shadow-accent-card {
-  box-shadow:
-    0 4px 6px color-mix(in oklab, var(--ink) 3%, transparent),
-    0 10px 28px color-mix(in oklab, var(--accent) 10%, transparent);
+@utility section-y {
+  padding-block: clamp(4.5rem, 9vw, 9rem);
 }
 
-@utility shadow-accent-card-hover {
-  box-shadow:
-    0 8px 12px color-mix(in oklab, var(--ink) 4%, transparent),
-    0 18px 40px color-mix(in oklab, var(--accent) 16%, transparent);
-}
-
-.accent-veil {
-  background-image: radial-gradient(
-    ellipse at 50% 0%,
-    color-mix(in oklab, var(--accent) 8%, transparent),
-    transparent 70%
-  );
-}
-
-.accent-veil-map {
-  background-image:
-    radial-gradient(
-      ellipse at 72% 38%,
-      color-mix(in oklab, var(--accent) 12%, transparent),
-      transparent 52%
-    ),
-    radial-gradient(
-      ellipse at 12% 85%,
-      color-mix(in oklab, var(--ink) 4%, transparent),
-      transparent 48%
-    );
+@utility container-x {
+  margin-inline: auto;
+  width: 100%;
+  max-width: 1380px;
+  padding-inline: clamp(1rem, 3vw, 1.875rem);
 }
 
 html {
@@ -78,32 +89,81 @@ html {
   }
 }
 
-#apparel,
-#catalog,
-#contact,
-#about,
-#reviews,
-#trusted,
-#easy {
-  scroll-margin-top: 1rem;
+/* Fixed header height. */
+section[id] {
+  scroll-margin-top: 4.5rem;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-geist-sans), sans-serif;
+  font-family: var(--font-manrope), sans-serif;
 }
 
-@keyframes hq-pulse {
-  0%,
-  100% {
-    opacity: 0.55;
+/* Event-driven reveals (see components/ui/reveal.tsx). */
+.reveal {
+  opacity: 0;
+  transform: translate3d(0, 16px, 0);
+  transition:
+    opacity 700ms var(--ease-out-soft),
+    transform 700ms var(--ease-out-soft);
+}
+
+.reveal-clip {
+  clip-path: inset(0 0 100% 0);
+  transition: clip-path 900ms var(--ease-out-soft);
+}
+
+.reveal-clip img {
+  transform: scale(1.06);
+  transition: transform 1200ms var(--ease-out-soft);
+}
+
+.reveal[data-shown="true"] {
+  opacity: 1;
+  transform: none;
+}
+
+.reveal-clip[data-shown="true"] {
+  clip-path: inset(0);
+}
+
+.reveal-clip[data-shown="true"] img {
+  transform: scale(1);
+}
+
+@keyframes hero-settle {
+  from {
+    transform: scale(1.08);
+  }
+  to {
     transform: scale(1);
   }
-  50% {
-    opacity: 0.15;
-    transform: scale(1.35);
+}
+
+.hero-settle {
+  animation: hero-settle 2400ms var(--ease-out-soft) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-settle {
+    animation: none;
   }
+
+  .reveal,
+  .reveal-clip,
+  .reveal-clip img {
+    opacity: 1;
+    transform: none;
+    clip-path: none;
+    transition: none;
+  }
+}
+
+/* Paused while off-screen (see hooks/use-in-view.ts). */
+[data-in-view="false"] *,
+[data-in-view="false"] {
+  animation-play-state: paused !important;
 }
 
 @keyframes hq-ring {
@@ -114,12 +174,6 @@ body {
   100% {
     opacity: 0;
     transform: scale(1.55);
-  }
-}
-
-@keyframes route-dash {
-  to {
-    stroke-dashoffset: -48;
   }
 }
 
@@ -143,215 +197,171 @@ body {
   will-change: auto;
 }
 
-#about .hq-pulse {
-  transform-origin: center;
-  transform-box: fill-box;
-  animation: hq-pulse 2.8s ease-in-out infinite;
-}
-
 #about .hq-ring {
   transform-origin: center;
   transform-box: fill-box;
   animation: hq-ring 2.8s ease-out infinite;
 }
 
+/* Routes draw once when the map first scrolls into view. */
 #about .delivery-routes path {
-  animation: route-dash 18s linear infinite;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 1400ms var(--ease-out-soft);
+}
+
+#about [data-drawn="true"] .delivery-routes path {
+  stroke-dashoffset: 0;
+}
+
+/* Production line: fills once, lights each stage, then a dot keeps travelling. */
+#production .flow-track {
+  position: absolute;
+  top: 1.25rem;
+  bottom: 0;
+  left: 1.25rem;
+  width: 1px;
+  background: var(--line);
+}
+
+#production .flow-fill {
+  position: absolute;
+  inset: 0;
+  background: var(--accent);
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform 2400ms linear;
+}
+
+#production .flow-dot {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 9px;
+  height: 9px;
+  margin: -4.5px 0 0 -4.5px;
+  border-radius: 999px;
+  background: var(--accent);
+  box-shadow: 0 0 0 5px color-mix(in oklab, var(--accent) 22%, transparent);
+  opacity: 0;
+}
+
+#production .flow-node {
+  transition:
+    background-color 450ms var(--ease-out-soft),
+    border-color 450ms var(--ease-out-soft),
+    color 450ms var(--ease-out-soft),
+    box-shadow 450ms var(--ease-out-soft);
+  transition-delay: calc(var(--i) * 400ms);
+}
+
+#production .flow-body {
+  opacity: 0.35;
+  transform: translate3d(0, 10px, 0);
+  transition:
+    opacity 700ms var(--ease-out-soft),
+    transform 700ms var(--ease-out-soft);
+  transition-delay: calc(var(--i) * 400ms);
+}
+
+#production [data-on="true"] .flow-fill {
+  transform: none;
+}
+
+#production [data-on="true"] .flow-node {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--background);
+  box-shadow: 0 0 0 6px color-mix(in oklab, var(--accent) 16%, transparent);
+}
+
+#production [data-on="true"] .flow-body {
+  opacity: 1;
+  transform: none;
+}
+
+#production [data-on="true"] .flow-dot {
+  animation: flow-y 5s 2400ms linear infinite;
+}
+
+@keyframes flow-y {
+  0% {
+    top: 0;
+    opacity: 0;
+  }
+  8%,
+  90% {
+    opacity: 1;
+  }
+  100% {
+    top: 100%;
+    opacity: 0;
+  }
+}
+
+@keyframes flow-x {
+  0% {
+    left: 0;
+    opacity: 0;
+  }
+  8%,
+  90% {
+    opacity: 1;
+  }
+  100% {
+    left: 100%;
+    opacity: 0;
+  }
+}
+
+@media (min-width: 64rem) {
+  #production .flow-track {
+    top: 1.25rem;
+    right: 0;
+    bottom: auto;
+    width: auto;
+    height: 1px;
+  }
+
+  #production .flow-fill {
+    transform: scaleX(0);
+    transform-origin: left;
+  }
+
+  #production .flow-dot {
+    top: 50%;
+    left: 0;
+  }
+
+  #production [data-on="true"] .flow-dot {
+    animation-name: flow-x;
+    animation-duration: 7s;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  #about .hq-pulse,
-  #about .hq-ring,
-  #about .delivery-routes path {
+  #production .flow-fill,
+  #production .flow-body,
+  #production .flow-node {
+    transform: none;
+    opacity: 1;
+    transition: none;
+  }
+
+  #production .flow-dot {
+    display: none;
+  }
+
+  #about .hq-ring {
     animation: none;
+  }
+
+  #about .delivery-routes path {
+    stroke-dashoffset: 0;
+    transition: none;
   }
 
   .panel-slide-in {
     animation: none;
-  }
-
-  .reviews-mosaic-col--up,
-  .reviews-mosaic-col--down,
-  .trusted-by-track {
-    animation: none;
-  }
-
-  .trusted-by-track {
-    flex-wrap: wrap;
-    justify-content: center;
-    width: auto;
-  }
-}
-
-/* Reviews mosaic */
-.reviews-mosaic-bg {
-  transform: rotate(-6deg);
-}
-
-.reviews-mosaic-frame::before,
-.reviews-mosaic-frame::after {
-  content: "";
-  position: absolute;
-  z-index: 1;
-  pointer-events: none;
-}
-
-.reviews-mosaic-frame::before {
-  inset: 0 0 auto;
-  height: 88px;
-  background: linear-gradient(to bottom, var(--surface) 10%, transparent);
-}
-
-.reviews-mosaic-frame::after {
-  inset: auto 0 0;
-  height: 120px;
-  background: linear-gradient(to top, var(--surface) 18%, transparent);
-}
-
-.reviews-mosaic-frame {
-  mask-image: linear-gradient(
-    90deg,
-    transparent 0%,
-    #000 6%,
-    #000 94%,
-    transparent 100%
-  );
-}
-
-@keyframes reviews-drift-up {
-  to {
-    translate: 0 -33.3333%;
-  }
-}
-
-@keyframes reviews-drift-down {
-  from {
-    translate: 0 -33.3333%;
-  }
-  to {
-    translate: 0 0;
-  }
-}
-
-.reviews-mosaic-col--up {
-  animation: reviews-drift-up 48s linear infinite;
-}
-
-.reviews-mosaic-col--down {
-  animation: reviews-drift-down 48s linear infinite;
-}
-
-/* Trusted-by marquee — light surface */
-.trusted-by-marquee {
-  mask-image: linear-gradient(
-    90deg,
-    transparent,
-    #000 7%,
-    #000 93%,
-    transparent
-  );
-}
-
-@keyframes trusted-marquee {
-  to {
-    transform: translate(-50%);
-  }
-}
-
-.trusted-by-track {
-  animation: trusted-marquee 40s linear infinite;
-}
-
-.trusted-by-marquee:hover .trusted-by-track {
-  animation-play-state: paused;
-}
-
-.trusted-by-logo {
-  opacity: 0.72;
-  transition: opacity 0.25s;
-}
-
-.trusted-by-item:hover {
-  background: color-mix(in oklab, var(--accent) 10%, white);
-}
-
-.trusted-by-item:hover .trusted-by-logo {
-  opacity: 1;
-}
-
-@keyframes discount-toast-in {
-  from {
-    opacity: 0;
-    transform: translate3d(0, 16px, 0);
-  }
-  to {
-    opacity: 1;
-    transform: translate3d(0, 0, 0);
-  }
-}
-
-@keyframes discount-toast-out {
-  from {
-    opacity: 1;
-    transform: translate3d(0, 0, 0);
-  }
-  to {
-    opacity: 0;
-    transform: translate3d(0, 12px, 0);
-  }
-}
-
-.discount-toast--in {
-  animation: discount-toast-in 0.35s ease-out both;
-}
-
-.discount-toast--out {
-  animation: discount-toast-out 0.28s ease-in both;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .discount-toast--in,
-  .discount-toast--out {
-    animation: none;
-  }
-}
-
-/* Factory panel history — scroll beam tip pulse */
-@keyframes factory-history-beam-tip {
-  0%,
-  100% {
-    opacity: 0.85;
-    transform: translate(-50%, 50%) scale(1);
-  }
-  50% {
-    opacity: 1;
-    transform: translate(-50%, 50%) scale(1.25);
-  }
-}
-
-.factory-history-beam {
-  transition:
-    height 220ms cubic-bezier(0.22, 1, 0.36, 1),
-    opacity 160ms ease;
-  will-change: height, opacity;
-}
-
-.factory-history-beam-tip {
-  animation: factory-history-beam-tip 1.6s ease-in-out infinite;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .factory-history-beam {
-    transition: none;
-  }
-
-  .factory-history-beam-tip {
-    animation: none;
-  }
-
-  .factory-history-item {
-    transition: none !important;
-    opacity: 1 !important;
-    transform: none !important;
   }
 }

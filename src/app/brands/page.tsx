@@ -1,16 +1,22 @@
 import type { Metadata } from "next";
-import { BrandPhotoWall } from "@/components/brand-photo-wall";
-import { BrandsClients, BrandsCollaborate } from "@/components/brands-proof";
-import { BrandsGallery } from "@/components/brands-gallery";
-import { DeliveryMap } from "@/components/delivery-map";
-import { Hero } from "@/components/hero";
+import { Capabilities } from "@/components/brands/capabilities";
+import { Categories } from "@/components/brands/categories";
+import { EasyStory } from "@/components/brands/easy-story";
+import { EditorialPortfolio } from "@/components/brands/editorial-portfolio";
+import { FactoryFashionCompare } from "@/components/brands/factory-fashion-compare";
+import { ProcessSteps } from "@/components/brands/process-steps";
+import { StudioBrief } from "@/components/brands/studio-brief";
+import { StudioHero } from "@/components/brands/studio-hero";
+import { Techniques } from "@/components/brands/techniques";
+import { BrandsClients } from "@/components/brands-proof";
+import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
-
-const WA_SEWING =
-  "https://wa.me/77781200084?text=" +
-  encodeURIComponent(
-    "Здравствуйте! Нужен пошив одежды под наш бренд — с логотипом.",
-  );
+import {
+  COMPARE_PAIRS,
+  TESTIMONIALS,
+  WA_SEWING,
+  publicShots,
+} from "@/lib/brands-content";
 
 export const metadata: Metadata = {
   title: "Пошив одежды под ваш бренд — Termmo Balance",
@@ -18,43 +24,41 @@ export const metadata: Metadata = {
     "Шьём любую одежду под любой бренд: футболки, худи, свитшоты. Логотип, вышивка и шевроны со своего завода в Шымкенте.",
 };
 
+const NAV = [
+  { label: "Что шьём", href: "#categories" },
+  { label: "Работы", href: "#work" },
+  { label: "Производство", href: "#production" },
+  { label: "Контакты", href: "#contact" },
+  { label: "Завод", href: "/" },
+];
+
 export default function BrandsPage() {
   return (
-    <main>
+    <main className="theme-studio">
       <SiteHeader
+        variant="studio"
         logoHref="/brands/"
-        links={[
-          { label: "Пошив", href: "/brands/" },
-          { label: "Завод", href: "/" },
-          { label: "Контакты", href: "/#contact" },
-        ]}
+        links={NAV}
         cta={{ label: "Заказать пошив", href: WA_SEWING }}
       />
-      <Hero
-        background={<BrandPhotoWall priority />}
-        eyebrow="Пошив одежды · Шымкент · с 2008"
-        title="Шьём любую одежду под любой бренд"
-        description={
-          <>
-            Футболки, худи, свитшоты и другая одежда на заказ. Наносим{" "}
-            <span className="font-semibold text-white">логотип</span>, вышивку
-            и шевроны — со своего завода{" "}
-            <span className="font-semibold text-accent">в Казахстане</span>.
-          </>
-        }
-        actions={[
-          { href: WA_SEWING, label: "Заказать пошив", tone: "solid" },
-          {
-            href: "https://wa.me/77781200084",
-            label: "WhatsApp",
-            tone: "ghost",
-          },
+      <StudioHero />
+      <EasyStory index="01" />
+      <Categories index="02" />
+      <Capabilities index="03" />
+      <Techniques index="04" />
+      <ProcessSteps index="05" />
+      <EditorialPortfolio index="06" shots={publicShots()} />
+      <FactoryFashionCompare index="07" pairs={COMPARE_PAIRS} />
+      <BrandsClients index="08" testimonials={TESTIMONIALS} />
+      <StudioBrief index="09" />
+      <SiteFooter
+        tone="light"
+        links={[
+          { label: "Пошив для брендов", href: "/brands/" },
+          { label: "Материалы и спецодежда", href: "/" },
+          { label: "Бриф", href: "#contact" },
         ]}
       />
-      <BrandsCollaborate />
-      <BrandsClients />
-      <BrandsGallery />
-      <DeliveryMap />
     </main>
   );
 }

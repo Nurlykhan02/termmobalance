@@ -1,9 +1,14 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
+import { ButtonLink } from "@/components/ui/button-link";
+import { FilterTabs, type FilterTab } from "@/components/ui/filter-tabs";
+import { Lightbox, type LightboxItem } from "@/components/ui/lightbox";
+import { SectionHeading } from "@/components/ui/section-heading";
+import { SidePanel } from "@/components/ui/side-panel";
+import { SpecLabel } from "@/components/ui/spec-label";
 import { asset } from "@/lib/asset";
-import { useSwipeToClose } from "@/hooks/use-swipe-to-close";
 
 const WA_EMBROIDERY =
   "https://wa.me/77781200084?text=" +
@@ -79,16 +84,59 @@ const gallery: GalleryItem[] = [
   },
 ];
 
-function coverOf(item: GalleryItem) {
-  return photoPath(item.folder, item.photos[0]);
+const TABS: FilterTab<CategoryId>[] = CATEGORIES.map((category) => ({
+  ...category,
+  count:
+    category.id === "all"
+      ? gallery.length
+      : gallery.filter((item) => item.category === category.id).length,
+}));
+
+function WorkCard({
+  item,
+  onOpen,
+}: {
+  item: GalleryItem;
+  onOpen: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onOpen}
+      aria-label={`Смотреть все фото: ${item.title}`}
+      className="group block w-full text-left focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
+    >
+      <span className="relative block aspect-[3/4] overflow-hidden bg-wash">
+        <Image
+          src={photoPath(item.folder, item.photos[0])}
+          alt={item.title}
+          fill
+          className="object-cover object-[center_18%] transition-transform duration-700 ease-out-soft group-hover:scale-[1.04]"
+          sizes="(max-width: 1024px) 50vw, 25vw"
+        />
+      </span>
+      <SpecLabel className="mt-4">
+        {item.categoryLabel} · {item.photos.length} фото
+      </SpecLabel>
+      <span className="mt-2 flex items-baseline justify-between gap-3">
+        <span className="font-display text-h3 font-semibold text-ink">
+          {item.title}
+        </span>
+        <span
+          aria-hidden
+          className="text-muted transition-transform duration-300 group-hover:translate-x-0.5 group-hover:text-ink"
+        >
+          →
+        </span>
+      </span>
+      <span className="mt-1 line-clamp-2 block text-sm text-muted">
+        {item.place}
+      </span>
+    </button>
+  );
 }
 
-function countItems(categoryId: CategoryId) {
-  if (categoryId === "all") return gallery.length;
-  return gallery.filter((item) => item.category === categoryId).length;
-}
-
-export function ApparelSolutions() {
+export function ApparelSolutions({ index }: { index?: string } = {}) {
   const [filter, setFilter] = useState<CategoryId>("all");
   const [activeId, setActiveId] = useState<string | null>(null);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
@@ -101,332 +149,108 @@ export function ApparelSolutions() {
     [filter],
   );
 
-  const active = useMemo(
-    () => gallery.find((item) => item.id === activeId) ?? null,
-    [activeId],
+  const active = gallery.find((item) => item.id === activeId) ?? null;
+
+  const lightboxItems: LightboxItem[] = useMemo(
+    () =>
+      active
+        ? active.photos.map((file, i) => ({
+            src: photoPath(active.folder, file),
+            alt: `${active.title}, фото ${i + 1}`,
+            caption: active.title,
+          }))
+        : [],
+    [active],
   );
 
-  const openItem = (id: string) => {
-    setActiveId(id);
-    setLightboxIndex(null);
-  };
-
-  const closeAll = () => {
+  const closePanel = useCallback(() => {
     setActiveId(null);
     setLightboxIndex(null);
-  };
-
-  const {
-    panelRef,
-    handlers: swipeHandlers,
-    style: swipeStyle,
-  } = useSwipeToClose({
-    onClose: closeAll,
-    enabled: Boolean(active) && lightboxIndex === null,
-  });
-
-  useEffect(() => {
-    if (!active) return;
-
-    const onKey = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        if (lightboxIndex !== null) setLightboxIndex(null);
-        else closeAll();
-        return;
-      }
-
-      if (lightboxIndex === null || active.photos.length < 2) return;
-
-      if (event.key === "ArrowRight") {
-        setLightboxIndex((i) => ((i ?? 0) + 1) % active.photos.length);
-      }
-      if (event.key === "ArrowLeft") {
-        setLightboxIndex(
-          (i) => ((i ?? 0) - 1 + active.photos.length) % active.photos.length,
-        );
-      }
-    };
-
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    window.addEventListener("keydown", onKey);
-    return () => {
-      document.body.style.overflow = prev;
-      window.removeEventListener("keydown", onKey);
-    };
-  }, [active, lightboxIndex]);
+  }, []);
+  const closeLightbox = useCallback(() => setLightboxIndex(null), []);
 
   return (
-    <section
-      id="apparel"
-      className="relative overflow-hidden bg-surface px-4 py-14 text-ink sm:px-[30px] sm:py-20"
-    >
-      <div
-        aria-hidden
-        className="accent-veil pointer-events-none absolute inset-x-0 top-0 h-64"
-      />
+    <section id="apparel" className="section-y bg-surface text-ink">
+      <div className="container-x">
+        <SectionHeading
+          index={index}
+          eyebrow="Спецодежда"
+          title="Наши работы по вышивке спецодежды"
+          lead="Шьём любые спецодежды под ваш запрос — куртки, жилеты, комплекты и другие изделия. Любые дизайны, вышивка и шевроны под бренд или задачу."
+        />
 
-      <div className="relative mx-auto max-w-[1280px]">
-        <div className="flex flex-col items-center text-center">
-          <h2 className="font-display max-w-[720px] text-[clamp(1.7rem,4.2vw,3.1rem)] leading-[1.08] font-semibold tracking-[-0.035em] text-ink">
-            Наши работы по вышивке спецодежды
-          </h2>
+        <FilterTabs
+          label="Фильтр работ"
+          tabs={TABS}
+          value={filter}
+          onChange={setFilter}
+          className="mt-12 sm:mt-16"
+        />
 
-          <p className="mt-3 max-w-[580px] text-[14px] leading-relaxed text-muted sm:text-[16px]">
-            Шьём любые спецодежды под ваш запрос — куртки, жилеты, комплекты и
-            другие изделия. Любые дизайны, вышивка и шевроны под бренд или
-            задачу. Ниже — примеры наших работ.
-          </p>
-        </div>
-
-        <div
-          role="tablist"
-          aria-label="Фильтр работ"
-          className="mt-8 flex flex-wrap items-center justify-center gap-2 sm:mt-10"
-        >
-          {CATEGORIES.map((category) => {
-            const isActive = filter === category.id;
-            const count = countItems(category.id);
-            return (
-              <button
-                key={category.id}
-                type="button"
-                role="tab"
-                aria-selected={isActive}
-                onClick={() => setFilter(category.id)}
-                className={
-                  isActive
-                    ? "shadow-accent-btn inline-flex items-center gap-2 rounded-full bg-accent px-4 py-2 text-[13px] font-medium text-white"
-                    : "inline-flex items-center gap-2 rounded-full border border-black/[0.08] bg-white px-4 py-2 text-[13px] font-medium text-ink/65 shadow-[0_2px_8px_rgba(33,14,3,0.04)] transition-colors hover:border-accent/35 hover:text-ink"
-                }
-              >
-                {category.label}
-                <span
-                  className={
-                    isActive
-                      ? "rounded-full bg-white/20 px-1.5 py-0.5 text-[11px] tabular-nums text-white/90"
-                      : "rounded-full bg-accent/10 px-1.5 py-0.5 text-[11px] tabular-nums text-accent"
-                  }
-                >
-                  {count}
-                </span>
-              </button>
-            );
-          })}
-        </div>
-
-        <div className="mt-7 grid grid-cols-2 gap-3 sm:mt-10 sm:gap-4 lg:grid-cols-4 lg:gap-5">
-          {filtered.map((item, index) => (
-            <button
-              key={item.id}
-              type="button"
-              onClick={() => openItem(item.id)}
-              aria-label={`Смотреть все: ${item.title}`}
-              className="shadow-accent-card hover:shadow-accent-card-hover group overflow-hidden rounded-[16px] bg-raised text-left ring-1 ring-black/[0.04] transition-[transform,box-shadow] hover:-translate-y-1 focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none sm:rounded-[18px]"
-            >
-              <div className="relative aspect-[3/4] overflow-hidden bg-wash">
-                <Image
-                  src={coverOf(item)}
-                  alt={item.title}
-                  fill
-                  className="object-cover object-[center_18%] transition-transform duration-700 ease-out group-hover:scale-[1.03]"
-                  sizes="(max-width: 1024px) 50vw, 25vw"
-                  priority={index < 4}
-                  quality={85}
-                />
-                <div
-                  aria-hidden
-                  className="pointer-events-none absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-white/35 to-transparent"
-                />
-                <span className="shadow-accent-btn absolute top-2 left-2 z-[1] rounded-full bg-accent px-2 py-0.5 text-[10px] font-medium text-white sm:top-2.5 sm:left-2.5 sm:px-2.5 sm:py-1 sm:text-[11px]">
-                  {item.categoryLabel}
-                </span>
-                <span className="absolute top-2 right-2 z-[1] flex items-center gap-1.5 rounded-[10px] bg-white/95 px-1.5 py-1 shadow-[0_4px_14px_rgba(33,14,3,0.12)] backdrop-blur-sm sm:top-2.5 sm:right-2.5 sm:gap-2 sm:rounded-[12px] sm:px-2 sm:py-1.5">
-                  <span
-                    aria-hidden
-                    className="size-[14px] shrink-0 rounded-full border border-accent sm:size-[16px] sm:border-[1.5px]"
-                  />
-                  <span className="flex flex-col leading-none">
-                    <span className="text-[8px] font-bold tracking-[0.12em] text-ink uppercase sm:text-[9px]">
-                      Termmo
-                    </span>
-                    <span className="text-[8px] font-bold tracking-[0.12em] text-ink uppercase sm:text-[9px]">
-                      Balance
-                    </span>
-                  </span>
-                </span>
-              </div>
-
-              <div className="flex flex-col gap-2 border-t border-accent/10 bg-gradient-to-b from-wash to-raised p-2.5 sm:gap-2.5 sm:p-3.5">
-                <div>
-                  <h3 className="text-[14px] leading-tight font-semibold tracking-[-0.02em] text-ink sm:text-[16px]">
-                    {item.title}
-                  </h3>
-                  <p className="mt-0.5 line-clamp-2 text-[11px] leading-snug text-muted sm:text-[12px]">
-                    {item.place}
-                  </p>
-                </div>
-
-                <span className="shadow-accent-btn inline-flex w-full items-center justify-center gap-1.5 rounded-full bg-accent px-2.5 py-2 text-[11px] font-semibold text-white sm:gap-2 sm:px-3 sm:text-[12px]">
-                  Смотреть все
-                  <span className="tabular-nums text-white/75">
-                    {item.photos.length}
-                  </span>
-                </span>
-              </div>
-            </button>
+        <ul className="mt-8 grid grid-cols-2 gap-x-3 gap-y-10 sm:gap-x-4 lg:grid-cols-4 lg:gap-x-6">
+          {filtered.map((item) => (
+            <li key={item.id}>
+              <WorkCard item={item} onOpen={() => setActiveId(item.id)} />
+            </li>
           ))}
-        </div>
+        </ul>
 
-        <div className="mt-8 flex flex-col items-center gap-3 sm:mt-10 sm:flex-row sm:justify-between">
-          <p className="text-[13px] text-muted">
+        <div className="mt-12 flex flex-col items-start gap-4 border-t border-line pt-6 sm:flex-row sm:items-center sm:justify-between">
+          <SpecLabel>
             Показано {filtered.length} из {gallery.length} работ
-          </p>
-          <a
-            href={WA_EMBROIDERY}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 text-[14px] font-medium text-accent underline-offset-4 transition-opacity hover:underline"
-          >
-            Написать в WhatsApp
-            <span aria-hidden>→</span>
-          </a>
+          </SpecLabel>
+          <ButtonLink href={WA_EMBROIDERY} variant="text">
+            Бесплатная консультация в WhatsApp
+          </ButtonLink>
         </div>
       </div>
 
       {active ? (
-        <div
-          className="fixed inset-0 z-50"
-          role="dialog"
-          aria-modal="true"
-          aria-label={active.title}
+        <SidePanel
+          eyebrow={active.categoryLabel}
+          title={active.title}
+          meta={`${active.photos.length} фото · ${active.place}`}
+          onClose={closePanel}
+          locked={lightboxIndex !== null}
+          footer={
+            <ButtonLink href={WA_EMBROIDERY} className="w-full">
+              Обсудить похожее изделие
+            </ButtonLink>
+          }
         >
-          <button
-            type="button"
-            aria-label="Закрыть"
-            className="absolute inset-0 bg-black/40"
-            onClick={closeAll}
-          />
+          <ul className="grid grid-cols-2 gap-2">
+            {active.photos.map((file, i) => (
+              <li key={file}>
+                <button
+                  type="button"
+                  onClick={() => setLightboxIndex(i)}
+                  aria-label={`Открыть фото ${i + 1}`}
+                  className="group relative block aspect-[3/4] w-full overflow-hidden bg-wash focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+                >
+                  <Image
+                    src={photoPath(active.folder, file)}
+                    alt={`${active.title}, фото ${i + 1}`}
+                    fill
+                    className="object-cover object-[center_18%] transition-transform duration-500 group-hover:scale-[1.03]"
+                    sizes="200px"
+                  />
+                  <span className="absolute top-2 left-2 bg-surface/90 px-1.5 py-0.5 font-mono text-[10px] text-ink">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                </button>
+              </li>
+            ))}
+          </ul>
+        </SidePanel>
+      ) : null}
 
-          <div
-            ref={panelRef}
-            {...swipeHandlers}
-            style={swipeStyle}
-            className="panel-slide-in absolute inset-y-0 right-0 z-[1] flex h-[100dvh] w-[82%] max-w-[380px] flex-col bg-white shadow-[-8px_0_24px_rgba(0,0,0,0.12)] sm:w-full sm:max-w-[400px]"
-          >
-            <header className="flex shrink-0 items-start justify-between gap-3 border-b border-black/[0.06] px-4 py-3.5 sm:px-5 sm:py-4">
-              <div className="min-w-0 pt-0.5">
-                <h3 className="truncate text-[16px] font-semibold tracking-[-0.02em] text-ink sm:text-[18px]">
-                  {active.title}
-                </h3>
-                <p className="mt-0.5 text-[12px] text-muted sm:text-[13px]">
-                  {active.photos.length} фото · {active.place}
-                </p>
-              </div>
-
-              <button
-                type="button"
-                onClick={closeAll}
-                className="flex size-9 shrink-0 items-center justify-center rounded-full bg-accent text-[20px] leading-none text-white sm:size-10"
-                aria-label="Закрыть"
-              >
-                ×
-              </button>
-            </header>
-
-            <div className="min-h-0 flex-1 overflow-y-scroll overscroll-y-contain px-3 py-3 [-webkit-overflow-scrolling:touch] [touch-action:pan-y] sm:px-4 sm:py-4">
-              <div className="grid grid-cols-3 gap-2 sm:gap-2.5">
-                {active.photos.map((file, index) => (
-                  <button
-                    key={file}
-                    type="button"
-                    onClick={() => setLightboxIndex(index)}
-                    className="shadow-accent-card relative aspect-[3/4] overflow-hidden rounded-lg bg-wash ring-1 ring-black/[0.04] transition-[transform,box-shadow] hover:-translate-y-0.5 hover:shadow-accent-card-hover focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none"
-                  >
-                    <Image
-                      src={photoPath(active.folder, file)}
-                      alt={`${active.title} ${index + 1}`}
-                      fill
-                      className="object-cover object-[center_18%]"
-                      sizes="120px"
-                      quality={70}
-                      priority={index < 6}
-                    />
-                    <span className="shadow-accent-btn absolute top-1 left-1 rounded-full bg-accent px-1.5 py-0.5 text-[8px] font-medium text-white tabular-nums">
-                      {index + 1}
-                    </span>
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {lightboxIndex !== null ? (
-            <div
-              className="fixed inset-0 z-[60] bg-black"
-              role="dialog"
-              aria-modal="true"
-              aria-label={`${active.title} — фото ${lightboxIndex + 1}`}
-              onClick={() => setLightboxIndex(null)}
-            >
-              <Image
-                key={active.photos[lightboxIndex]}
-                src={photoPath(active.folder, active.photos[lightboxIndex])}
-                alt={`${active.title} ${lightboxIndex + 1}`}
-                fill
-                className="object-contain object-center"
-                sizes="100vw"
-                quality={95}
-                priority
-                onClick={(event) => event.stopPropagation()}
-              />
-
-              <button
-                type="button"
-                onClick={(event) => {
-                  event.stopPropagation();
-                  setLightboxIndex(null);
-                }}
-                className="absolute top-3 right-3 z-10 flex size-11 items-center justify-center rounded-full bg-white text-[22px] leading-none text-ink shadow-[0_8px_24px_rgba(0,0,0,0.35)] sm:top-5 sm:right-5 sm:size-12"
-                aria-label="Закрыть фото"
-              >
-                ×
-              </button>
-
-              {active.photos.length > 1 ? (
-                <>
-                  <button
-                    type="button"
-                    aria-label="Предыдущее фото"
-                    onClick={(event) => {
-                      event.stopPropagation();
-                      setLightboxIndex(
-                        (lightboxIndex - 1 + active.photos.length) %
-                          active.photos.length,
-                      );
-                    }}
-                    className="absolute top-1/2 left-2 z-10 flex size-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/30 bg-black/45 text-[28px] leading-none text-white transition-colors hover:bg-black/65 sm:left-5 sm:size-12"
-                  >
-                    ‹
-                  </button>
-                  <button
-                    type="button"
-                    aria-label="Следующее фото"
-                    onClick={(event) => {
-                      event.stopPropagation();
-                      setLightboxIndex(
-                        (lightboxIndex + 1) % active.photos.length,
-                      );
-                    }}
-                    className="absolute top-1/2 right-2 z-10 flex size-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/30 bg-black/45 text-[28px] leading-none text-white transition-colors hover:bg-black/65 sm:right-5 sm:size-12"
-                  >
-                    ›
-                  </button>
-                </>
-              ) : null}
-            </div>
-          ) : null}
-        </div>
+      {active && lightboxIndex !== null ? (
+        <Lightbox
+          items={lightboxItems}
+          index={lightboxIndex}
+          onIndexChange={setLightboxIndex}
+          onClose={closeLightbox}
+        />
       ) : null}
     </section>
   );

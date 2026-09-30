@@ -1,69 +1,64 @@
-import Image from "next/image";
-import { BrandPhotoWall } from "@/components/brand-photo-wall";
-import { asset } from "@/lib/asset";
+import { ClientLogos } from "@/components/client-logos";
+import { Reveal } from "@/components/ui/reveal";
+import { SectionHeading } from "@/components/ui/section-heading";
+import { SpecLabel } from "@/components/ui/spec-label";
+import type { Testimonial } from "@/lib/brands-content";
 
-const CLIENTS = Array.from({ length: 20 }, (_, i) => {
-  const n = String(i + 1).padStart(2, "0");
-  return {
-    id: `client-${n}`,
-    src: asset(`/images/trusted/client-${n}.png`),
-  };
-});
-
-export function BrandsCollaborate() {
+export function BrandsClients({
+  index,
+  testimonials,
+}: {
+  index: string;
+  testimonials: Testimonial[];
+}) {
   return (
     <section
-      id="reviews"
-      className="relative isolate h-[min(88vh,840px)] min-h-[560px] overflow-hidden bg-surface text-ink"
+      id="clients"
+      aria-labelledby="clients-title"
+      className="section-y bg-surface text-ink"
     >
-      <BrandPhotoWall scrim />
+      <div className="container-x">
+        <SectionHeading
+          id="clients-title"
+          index={index}
+          eyebrow="Отзывы и клиенты"
+          title="Бренды и фабрики, которые шьют у нас"
+          lead="Молодые бренды одежды, швейные фабрики и заказчики спецодежды по всему Казахстану."
+        />
 
-      <div className="relative z-[3] flex h-full items-center justify-center px-5">
-        <div className="mx-auto max-w-[760px] text-center">
-          <p className="font-mono text-[12px] font-medium tracking-[0.14em] text-muted uppercase">
-            Снова и снова
-          </p>
-          <h2 className="font-display mt-3 text-[clamp(1.85rem,4.6vw,3.4rem)] leading-[1.06] font-semibold tracking-[-0.035em] text-ink">
-            С нами сотрудничают снова и снова
-          </h2>
-          <p className="mx-auto mt-4 max-w-[540px] text-[14px] leading-relaxed text-muted sm:text-[16px]">
-            Фабрики, сети и госзаказчики возвращаются за новыми тиражами —
-            утеплители и спецодежда со своего завода в Шымкенте.
-          </p>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-export function BrandsClients() {
-  return (
-    <section
-      id="trusted"
-      aria-label="С кем мы работаем"
-      className="overflow-hidden bg-surface px-5 pt-2 pb-12 text-center sm:pb-16"
-    >
-      <h2 className="mb-[30px] font-mono text-[12px] font-medium tracking-[0.14em] text-muted uppercase">
-        С кем мы работаем
-      </h2>
-
-      <div className="trusted-by-marquee overflow-hidden">
-        <div className="trusted-by-track flex w-max items-center gap-10 pr-10">
-          {[0, 1].map((copy) => (
-            <div key={copy} className="flex items-center gap-10">
-              {CLIENTS.map((client) => (
-                <Image
-                  key={`${copy}-${client.id}`}
-                  src={client.src}
-                  alt=""
-                  width={176}
-                  height={48}
-                  className="h-8 w-auto max-w-[148px] object-contain opacity-75 transition-opacity duration-200 hover:opacity-100 sm:h-9"
-                />
-              ))}
-            </div>
+        <ul className="mt-14 grid gap-4 sm:mt-20 lg:grid-cols-3">
+          {testimonials.map((item, i) => (
+            <li key={item.author}>
+              <Reveal delay={i * 90} className="h-full">
+                <figure className="flex h-full flex-col justify-between gap-10 border border-line bg-background p-6 sm:p-8">
+                  <blockquote className="text-lead text-ink">
+                    <span aria-hidden className="block font-display text-[3.5rem] leading-[0.6] text-accent">
+                      “
+                    </span>
+                    <p className="mt-4">{item.quote}</p>
+                  </blockquote>
+                  <figcaption className="flex items-center gap-3 border-t border-line pt-5">
+                    <span
+                      aria-hidden
+                      className="grid size-10 shrink-0 place-items-center rounded-full bg-wash font-display text-[15px] font-semibold text-accent"
+                    >
+                      {item.brand.charAt(0)}
+                    </span>
+                    <span>
+                      <span className="block text-[15px] font-medium text-ink">
+                        {item.author}
+                      </span>
+                      <SpecLabel>{item.brand}</SpecLabel>
+                    </span>
+                  </figcaption>
+                </figure>
+              </Reveal>
+            </li>
           ))}
-        </div>
+        </ul>
+
+        <SpecLabel className="mt-16 sm:mt-24">Клиенты завода</SpecLabel>
+        <ClientLogos className="mt-6" />
       </div>
     </section>
   );

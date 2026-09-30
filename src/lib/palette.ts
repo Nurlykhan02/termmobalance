@@ -104,8 +104,20 @@ function mixWithWhite(hex: string, amount: number) {
   return `#${channel(16)}${channel(8)}${channel(0)}`;
 }
 
+/**
+ * `.theme-studio` re-declares the tokens, so on /brands/ overrides must land on
+ * its <main> rather than on <html>. Studio sections embedded in other pages
+ * (the home teaser) keep their own dark tokens.
+ */
+function paletteTarget() {
+  return (
+    document.querySelector<HTMLElement>("main.theme-studio") ??
+    document.documentElement
+  );
+}
+
 export function applyPalette(palette: Palette) {
-  const root = document.documentElement;
+  const root = paletteTarget();
   const dark = isDarkHex(palette.surface);
   root.style.setProperty("--accent", palette.accent);
   root.style.setProperty("--surface", palette.surface);
@@ -124,7 +136,7 @@ export function applyPalette(palette: Palette) {
 }
 
 export function clearPalette() {
-  const root = document.documentElement;
+  const root = paletteTarget();
   for (const name of [
     "--accent",
     "--surface",

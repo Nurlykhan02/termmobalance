@@ -1,64 +1,49 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { asset } from "@/lib/asset";
 
 /** Soft dissolve only after the logo zoom has finished */
 const FADE_MS = 900;
 const HOLD_FADED_MS = 400;
-const MOBILE_MQ = "(max-width: 1023px)";
 
-const SRC_MOBILE = asset("/desktop.mp4");
-const SRC_DESKTOP = asset("/desktop.mp4");
+const SRC_MOBILE = asset("/video/hero-mobile.mp4");
+const SRC_DESKTOP = asset("/video/hero-1280.mp4");
+const POSTER = asset("/video/hero-poster.webp");
 
-function pickHeroSrc() {
-  if (typeof window === "undefined") return SRC_DESKTOP;
-  return window.matchMedia(MOBILE_MQ).matches ? SRC_MOBILE : SRC_DESKTOP;
+function motionAllowed() {
+  const saveData = (
+    navigator as Navigator & { connection?: { saveData?: boolean } }
+  ).connection?.saveData;
+  return (
+    !saveData && !window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  );
 }
 
 export function HeroBackground({ src: srcOverride }: { src?: string } = {}) {
   const fixedSrc = srcOverride ? asset(srcOverride) : null;
   const videoRef = useRef<HTMLVideoElement>(null);
-  const startedRef = useRef(false);
-  const phaseRef = useRef<"play" | "fading-out" | "hold" | "fading-in">(
-    "play",
-  );
-  const timersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
-  const [src, setSrc] = useState(fixedSrc ?? SRC_DESKTOP);
-
-  useEffect(() => {
-    if (fixedSrc) {
-      setSrc(fixedSrc);
-      return;
-    }
-
-    const sync = () => setSrc(pickHeroSrc());
-    sync();
-
-    const mql = window.matchMedia(MOBILE_MQ);
-    mql.addEventListener("change", sync);
-    return () => mql.removeEventListener("change", sync);
-  }, [fixedSrc]);
 
   useEffect(() => {
     const video = videoRef.current;
-    if (!video) return;
+    if (!video || !motionAllowed()) return;
 
-    startedRef.current = false;
-    phaseRef.current = "play";
+    let started = false;
+    let inView = true;
+    let phase: "play" | "fading-out" | "hold" | "fading-in" = "play";
+    let timers: ReturnType<typeof setTimeout>[] = [];
 
     const clearTimers = () => {
-      for (const timer of timersRef.current) clearTimeout(timer);
-      timersRef.current = [];
+      for (const timer of timers) clearTimeout(timer);
+      timers = [];
     };
 
     const later = (fn: () => void, ms: number) => {
-      const id = setTimeout(fn, ms);
-      timersRef.current.push(id);
-      return id;
+      timers.push(setTimeout(fn, ms));
     };
 
     const play = () => {
+      if (!inView) return;
       void video.play().catch(() => {
         /* autoplay may be blocked until user gesture */
       });
@@ -72,20 +57,18 @@ export function HeroBackground({ src: srcOverride }: { src?: string } = {}) {
     };
 
     const startPlayback = () => {
-      if (startedRef.current) return;
+      if (started) return;
       if (!Number.isFinite(video.duration) || video.duration <= 0) return;
 
-      startedRef.current = true;
-      phaseRef.current = "play";
+      started = true;
+      phase = "play";
       video.currentTime = 0;
-      video.playbackRate = 1;
       setOpacity(1, false);
       play();
     };
 
     const restartSoft = () => {
-      phaseRef.current = "fading-in";
-      video.playbackRate = 1;
+      phase = "fading-in";
       setOpacity(0, false);
 
       const onSeeked = () => {
@@ -95,7 +78,7 @@ export function HeroBackground({ src: srcOverride }: { src?: string } = {}) {
           requestAnimationFrame(() => {
             setOpacity(1, true);
             later(() => {
-              phaseRef.current = "play";
+              phase = "play";
             }, FADE_MS);
           });
         });
@@ -105,50 +88,63 @@ export function HeroBackground({ src: srcOverride }: { src?: string } = {}) {
       video.currentTime = 0;
     };
 
-    const beginFadeOutAndRestart = () => {
-      if (phaseRef.current !== "play") return;
-      phaseRef.current = "fading-out";
+    const onEnded = () => {
+      if (phase !== "play") return;
+      phase = "fading-out";
       clearTimers();
       setOpacity(0, true);
 
       later(() => {
         video.pause();
-        video.playbackRate = 1;
-        phaseRef.current = "hold";
-
-        later(() => {
-          restartSoft();
-        }, HOLD_FADED_MS);
+        phase = "hold";
+        later(restartSoft, HOLD_FADED_MS);
       }, FADE_MS);
     };
 
-    const onEnded = () => {
-      if (phaseRef.current !== "play") return;
-      beginFadeOutAndRestart();
-    };
+    const observer = new IntersectionObserver(([entry]) => {
+      inView = entry.isIntersecting;
+      if (!inView) video.pause();
+      else if (started && phase !== "hold") play();
+    });
 
     video.addEventListener("loadedmetadata", startPlayback);
     video.addEventListener("ended", onEnded);
+    observer.observe(video);
+    video.preload = "auto";
     if (video.readyState >= 1) startPlayback();
+    else video.load();
 
     return () => {
       clearTimers();
+      observer.disconnect();
       video.removeEventListener("loadedmetadata", startPlayback);
       video.removeEventListener("ended", onEnded);
     };
-  }, [src]);
+  }, [fixedSrc]);
 
   return (
-    <div className="absolute inset-0 -z-10 overflow-hidden bg-background">
+    <div
+      className="absolute inset-0 -z-10 overflow-hidden bg-background bg-cover bg-[60%_center] lg:bg-center"
+      style={fixedSrc ? undefined : { backgroundImage: `url(${POSTER})` }}
+    >
       <video
-        key={src}
         ref={videoRef}
-        src={src}
-        className="absolute inset-0 h-full w-full object-cover object-center"
+        className="absolute inset-0 h-full w-full object-cover object-[60%_center] lg:object-center"
+        poster={fixedSrc ? undefined : POSTER}
         muted
         playsInline
-        preload="auto"
-      />
+        preload="none"
+        aria-hidden
+      >
+        {fixedSrc ? (
+          <source src={fixedSrc} type="video/mp4" />
+        ) : (
+          <>
+            <source media="(max-width: 1023px)" src={SRC_MOBILE} type="video/mp4" />
+            <source src={SRC_DESKTOP} type="video/mp4" />
+          </>
+        )}
+      </video>
       <div className="absolute inset-0 bg-black/18" />
       <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/55 lg:hidden" />
       <div className="absolute inset-0 hidden bg-gradient-to-r from-black/55 via-black/22 to-transparent lg:block" />
