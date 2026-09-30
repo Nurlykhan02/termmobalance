@@ -93,7 +93,7 @@ export function Lightbox({
           type="button"
           onClick={onClose}
           aria-label="Закрыть"
-          className="flex size-11 items-center justify-center border border-white/20 transition-colors hover:border-white/60"
+          className="flex size-11 cursor-pointer items-center justify-center border border-white/20 transition-[border-color,background-color,transform] duration-200 hover:border-white/60 hover:bg-white/10 active:scale-95"
         >
           <Icon name="close" className="size-5" />
         </button>
@@ -117,7 +117,7 @@ export function Lightbox({
             type="button"
             onClick={() => go(-1)}
             aria-label="Предыдущее фото"
-            className="flex size-11 items-center justify-center border border-white/20 transition-colors hover:border-white/60"
+            className="flex size-11 cursor-pointer items-center justify-center border border-white/20 transition-[border-color,background-color,transform] duration-200 hover:border-white/60 hover:bg-white/10 active:scale-95"
           >
             <Icon name="chevron-left" className="size-5" />
           </button>
@@ -125,7 +125,7 @@ export function Lightbox({
             type="button"
             onClick={() => go(1)}
             aria-label="Следующее фото"
-            className="flex size-11 items-center justify-center border border-white/20 transition-colors hover:border-white/60"
+            className="flex size-11 cursor-pointer items-center justify-center border border-white/20 transition-[border-color,background-color,transform] duration-200 hover:border-white/60 hover:bg-white/10 active:scale-95"
           >
             <Icon name="chevron-right" className="size-5" />
           </button>

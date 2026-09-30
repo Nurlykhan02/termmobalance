@@ -100,6 +100,14 @@ body {
   font-family: var(--font-manrope), sans-serif;
 }
 
+/* Pressable controls: clear pointer on every real button. */
+button:enabled,
+[role="tab"],
+[role="button"] {
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
 /* Event-driven reveals (see components/ui/reveal.tsx). */
 .reveal {
   opacity: 0;
@@ -134,7 +142,7 @@ body {
 
 @keyframes hero-settle {
   from {
-    transform: scale(1.08);
+    transform: scale(1.04);
   }
   to {
     transform: scale(1);
@@ -142,6 +150,7 @@ body {
 }
 
 .hero-settle {
+  transform-origin: top center;
   animation: hero-settle 2400ms var(--ease-out-soft) both;
 }
 

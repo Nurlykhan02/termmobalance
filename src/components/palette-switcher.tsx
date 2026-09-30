@@ -110,7 +110,7 @@ function PaletteSwitcherPanel({ brands }: { brands: boolean }) {
   }
 
   return (
-    <div className="pointer-events-none fixed bottom-4 left-4 z-[90] flex max-w-[calc(100vw-2rem)] flex-col items-start gap-2">
+    <div className="pointer-events-none fixed right-4 bottom-4 left-auto z-[90] flex max-w-[calc(100vw-2rem)] flex-col items-end gap-2">
       {open ? (
         <section
           aria-labelledby={titleId}
@@ -252,7 +252,7 @@ function PaletteSwitcherPanel({ brands }: { brands: boolean }) {
         onClick={toggle}
         aria-expanded={open}
         aria-controls={open ? titleId : undefined}
-        className="pointer-events-auto inline-flex items-center gap-2 rounded-full bg-surface px-3 py-2 text-[12px] font-semibold text-ink shadow-[0_10px_28px_rgba(33,14,3,0.16)] ring-1 ring-ink/10"
+        className="pointer-events-auto inline-flex cursor-pointer items-center gap-2 rounded-full bg-surface px-3 py-2 text-[12px] font-semibold text-ink shadow-[0_10px_28px_rgba(33,14,3,0.16)] ring-1 ring-ink/10 transition-[transform,box-shadow] duration-200 hover:shadow-[0_14px_32px_rgba(33,14,3,0.22)] active:scale-[0.97]"
       >
         <span
           aria-hidden

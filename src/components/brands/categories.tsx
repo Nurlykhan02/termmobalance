@@ -44,7 +44,7 @@ export function Categories({ index }: { index: string }) {
                     )}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className={`group relative block overflow-hidden bg-raised text-[#ede6da] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent md:aspect-[4/5] ${
+                    className={`group relative block cursor-pointer overflow-hidden bg-raised text-[#ede6da] transition-transform duration-200 ease-out-soft focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent active:scale-[0.985] md:aspect-[4/5] ${
                       wide ? "aspect-[4/3] sm:aspect-[16/10]" : "aspect-[3/4]"
                     }`}
                   >
@@ -74,8 +74,8 @@ export function Categories({ index }: { index: string }) {
                         {String(i + 1).padStart(2, "0")}
                       </SpecLabel>
                       <span
-                        className={`grid place-items-center rounded-full border border-white/30 bg-black/30 backdrop-blur-sm transition-all duration-500 ease-out-soft group-hover:rotate-45 group-hover:border-accent group-hover:bg-accent group-hover:text-[#0e0d0c] sm:size-10 ${
-                          wide ? "size-10" : "size-8"
+                        className={`grid place-items-center rounded-full bg-accent text-[#0e0d0c] shadow-[0_8px_20px_-10px] shadow-black/50 transition-transform duration-500 ease-out-soft group-hover:rotate-45 sm:size-10 ${
+                          wide ? "size-10" : "size-9"
                         }`}
                       >
                         <Icon name="arrow-up-right" className="size-4" />

@@ -71,10 +71,10 @@ function Chips({
               type="button"
               aria-pressed={on}
               onClick={() => onChange(toggle(value, option))}
-              className={`inline-flex min-h-11 items-center gap-2 border px-4 text-[14px] transition-colors ${
+              className={`inline-flex min-h-11 cursor-pointer items-center gap-2 border px-4 text-[14px] transition-[color,background-color,border-color,transform] duration-200 active:scale-[0.97] ${
                 on
                   ? "border-accent bg-accent text-background"
-                  : "border-line text-ink hover:border-ink/50"
+                  : "border-line text-ink hover:border-ink/50 hover:bg-ink/5"
               }`}
             >
               {on ? <Icon name="close" className="size-3.5" /> : <Icon name="plus" className="size-3.5" />}
@@ -184,7 +184,7 @@ function BriefForm() {
               type="button"
               onClick={() => setStep(i)}
               aria-current={i === step ? "step" : undefined}
-              className="min-h-11 w-full text-left"
+              className="min-h-11 w-full cursor-pointer text-left transition-opacity duration-200 hover:opacity-80 active:scale-[0.98]"
             >
               <span
                 className={`block h-px ${i <= step ? "bg-accent" : "bg-line"}`}
@@ -270,7 +270,7 @@ function BriefForm() {
           type="button"
           onClick={() => setStep((s) => Math.max(0, s - 1))}
           disabled={step === 0}
-          className="inline-flex min-h-11 items-center gap-2 text-[14px] text-muted transition-colors hover:text-ink disabled:invisible"
+          className="inline-flex min-h-11 cursor-pointer items-center gap-2 text-[14px] text-muted transition-[color,transform] duration-200 hover:text-ink active:scale-[0.97] disabled:invisible"
         >
           <Icon name="chevron-left" />
           Назад
@@ -283,7 +283,7 @@ function BriefForm() {
           <button
             type="button"
             onClick={() => setStep((s) => s + 1)}
-            className="group inline-flex h-12 items-center gap-3 rounded-[var(--radius)] bg-ink px-5 text-[14px] font-medium text-surface transition-colors hover:bg-ink/85"
+            className="group inline-flex h-12 cursor-pointer items-center gap-3 rounded-[var(--radius)] bg-ink px-5 text-[14px] font-medium text-surface shadow-[0_1px_0_rgb(0_0_0/0.08)] transition-[color,background-color,transform,box-shadow] duration-200 hover:bg-ink/88 hover:shadow-[0_10px_28px_-14px] hover:shadow-ink/50 active:scale-[0.97]"
           >
             Дальше
             <Icon

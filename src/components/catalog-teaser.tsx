@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useCallback, useMemo, useState } from "react";
 import { ButtonLink } from "@/components/ui/button-link";
 import { FilterTabs, type FilterTab } from "@/components/ui/filter-tabs";
+import { Icon } from "@/components/ui/icon";
 import { Lightbox } from "@/components/ui/lightbox";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { SidePanel } from "@/components/ui/side-panel";
@@ -189,28 +190,34 @@ function LineCard({
       type="button"
       onClick={onOpen}
       aria-label={`Подробнее: ${line.name}`}
-      className="group block w-full text-left focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
+      className="group block w-full cursor-pointer text-left transition-transform duration-200 ease-out-soft focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent active:scale-[0.985]"
     >
-      <span className="relative block aspect-[3/4] overflow-hidden bg-wash">
+      <span className="relative block aspect-[4/5] overflow-hidden bg-wash sm:aspect-[3/4]">
         <Image
           src={lineImage(line)}
           alt={line.name}
           fill
           className="object-cover object-[center_12%] transition-transform duration-700 ease-out-soft group-hover:scale-[1.03]"
-          sizes="(max-width: 1024px) 50vw, 33vw"
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
         />
-      </span>
-      <SpecLabel className="mt-4">{line.brandLabel}</SpecLabel>
-      <span className="mt-2 flex items-baseline justify-between gap-3">
-        <span className="font-display text-h3 font-semibold text-ink">
-          {line.name}
-        </span>
         <span
           aria-hidden
-          className="text-muted transition-transform duration-300 group-hover:translate-x-0.5 group-hover:text-ink"
-        >
-          →
+          className="absolute inset-0 bg-gradient-to-t from-ink/55 via-transparent to-transparent sm:from-ink/0 sm:group-hover:from-ink/40 sm:group-hover:via-ink/10"
+        />
+        <span className="absolute top-3 right-3 grid size-10 place-items-center rounded-full bg-accent text-surface shadow-[0_8px_20px_-10px] shadow-ink/50 transition-transform duration-300 ease-out-soft group-hover:rotate-45 sm:top-4 sm:right-4">
+          <Icon name="arrow-up-right" className="size-4" />
         </span>
+        <span className="absolute inset-x-3 bottom-3 flex min-h-11 items-center justify-between gap-2 bg-accent px-3.5 text-[14px] font-medium text-surface shadow-[0_10px_24px_-12px] shadow-ink/50 sm:inset-x-4 sm:bottom-4">
+          Подробнее
+          <Icon
+            name="arrow-right"
+            className="size-4 shrink-0 transition-transform duration-300 group-hover:translate-x-0.5"
+          />
+        </span>
+      </span>
+      <SpecLabel className="mt-4">{line.brandLabel}</SpecLabel>
+      <span className="mt-2 block font-display text-h3 font-semibold text-ink">
+        {line.name}
       </span>
       <span className="mt-1 line-clamp-2 block text-sm text-muted">
         {line.use}
@@ -255,7 +262,7 @@ export function CatalogTeaser({ index }: { index?: string } = {}) {
           className="mt-12 sm:mt-16"
         />
 
-        <ul className="mt-8 grid grid-cols-2 gap-x-3 gap-y-10 sm:gap-x-4 lg:grid-cols-3 lg:gap-x-6">
+        <ul className="mt-8 grid grid-cols-1 gap-y-8 sm:grid-cols-2 sm:gap-x-4 sm:gap-y-10 lg:grid-cols-3 lg:gap-x-6">
           {filtered.map((line) => (
             <li key={line.id}>
               <LineCard line={line} onOpen={() => setActiveId(line.id)} />

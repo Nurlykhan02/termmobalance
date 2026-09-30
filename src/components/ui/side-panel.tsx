@@ -98,7 +98,7 @@ export function SidePanel({
             type="button"
             onClick={onClose}
             aria-label="Закрыть"
-            className="-mr-2 flex size-11 shrink-0 items-center justify-center text-ink transition-colors hover:text-accent"
+            className="-mr-2 flex size-11 shrink-0 cursor-pointer items-center justify-center text-ink transition-[color,transform] duration-200 hover:text-accent active:scale-95"
           >
             <Icon name="close" className="size-5" />
           </button>

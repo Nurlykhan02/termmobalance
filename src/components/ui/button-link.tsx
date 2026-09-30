@@ -11,16 +11,16 @@ export type ButtonVariant =
   | "outline-light";
 
 const BASE =
-  "group inline-flex items-center justify-center gap-3 text-[14px] font-medium tracking-[-0.01em] transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent";
+  "group inline-flex cursor-pointer items-center justify-center gap-3 text-[14px] font-medium tracking-[-0.01em] transition-[color,background-color,border-color,transform,box-shadow,opacity] duration-200 ease-out-soft focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent active:scale-[0.97]";
 
 const BOX = "h-12 rounded-[var(--radius)] px-5";
 
 const VARIANTS: Record<ButtonVariant, string> = {
-  primary: `${BOX} bg-ink text-surface hover:bg-ink/85`,
-  secondary: `${BOX} border border-ink/25 text-ink hover:border-ink hover:bg-ink/5`,
-  text: "min-h-11 px-0 text-ink underline decoration-ink/30 underline-offset-[6px] hover:decoration-ink",
-  light: `${BOX} bg-[#f4f0ea] text-[#0e0d0c] hover:bg-white`,
-  "outline-light": `${BOX} border border-white/40 text-white hover:border-white hover:bg-white/10`,
+  primary: `${BOX} bg-ink text-surface shadow-[0_1px_0_rgb(0_0_0/0.08)] hover:bg-ink/88 hover:shadow-[0_10px_28px_-14px] hover:shadow-ink/50`,
+  secondary: `${BOX} border border-ink/25 text-ink hover:border-ink hover:bg-ink/5 active:bg-ink/10`,
+  text: "min-h-11 px-0 text-ink underline decoration-ink/30 underline-offset-[6px] hover:decoration-ink active:opacity-70",
+  light: `${BOX} bg-[#f4f0ea] text-[#0e0d0c] shadow-[0_1px_0_rgb(0_0_0/0.06)] hover:bg-white hover:shadow-[0_10px_28px_-14px] hover:shadow-black/45 active:bg-[#e8e2d8]`,
+  "outline-light": `${BOX} border border-white/40 text-white hover:border-white hover:bg-white/12 active:bg-white/18`,
 };
 
 export function ButtonLink({

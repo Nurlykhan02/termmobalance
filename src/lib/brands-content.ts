@@ -106,7 +106,8 @@ export const HERO = {
   eyebrow: "Пошив одежды · Шымкент · с 2008",
   title: "Производим одежду для брендов",
   lead: "Футболки, худи, свитшоты и другая одежда на заказ. Наносим логотип, вышивку и шевроны — со своего завода в Казахстане.",
-  shot: 4,
+  /** Closer framing than the full-body lookbook tile — head survives wide hero crops. */
+  shot: 2,
   specs: ["Шымкент", "С 2008", "Свой завод", "От 50 шт", "От 14 дней"],
 };
 

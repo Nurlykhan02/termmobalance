@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useCallback, useMemo, useState } from "react";
 import { ButtonLink } from "@/components/ui/button-link";
 import { FilterTabs, type FilterTab } from "@/components/ui/filter-tabs";
+import { Icon } from "@/components/ui/icon";
 import { Lightbox, type LightboxItem } from "@/components/ui/lightbox";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { SidePanel } from "@/components/ui/side-panel";
@@ -104,30 +105,39 @@ function WorkCard({
       type="button"
       onClick={onOpen}
       aria-label={`Смотреть все фото: ${item.title}`}
-      className="group block w-full text-left focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
+      className="group block w-full cursor-pointer text-left transition-transform duration-200 ease-out-soft focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent active:scale-[0.985]"
     >
-      <span className="relative block aspect-[3/4] overflow-hidden bg-wash">
+      <span className="relative block aspect-[4/5] overflow-hidden bg-wash sm:aspect-[3/4]">
         <Image
           src={photoPath(item.folder, item.photos[0])}
           alt={item.title}
           fill
           className="object-cover object-[center_18%] transition-transform duration-700 ease-out-soft group-hover:scale-[1.04]"
-          sizes="(max-width: 1024px) 50vw, 25vw"
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
         />
-      </span>
-      <SpecLabel className="mt-4">
-        {item.categoryLabel} · {item.photos.length} фото
-      </SpecLabel>
-      <span className="mt-2 flex items-baseline justify-between gap-3">
-        <span className="font-display text-h3 font-semibold text-ink">
-          {item.title}
-        </span>
         <span
           aria-hidden
-          className="text-muted transition-transform duration-300 group-hover:translate-x-0.5 group-hover:text-ink"
-        >
-          →
+          className="absolute inset-0 bg-gradient-to-t from-ink/55 via-transparent to-transparent sm:from-ink/0 sm:group-hover:from-ink/40 sm:group-hover:via-ink/10"
+        />
+        <span className="absolute inset-x-3 top-3 flex items-start justify-between gap-2 sm:inset-x-4 sm:top-4">
+          <SpecLabel className="bg-surface px-2 py-1 text-ink shadow-[0_4px_14px_-8px] shadow-ink/50">
+            {item.photos.length} фото
+          </SpecLabel>
+          <span className="grid size-10 place-items-center rounded-full bg-accent text-surface shadow-[0_8px_20px_-10px] shadow-ink/50 transition-transform duration-300 ease-out-soft group-hover:rotate-45 group-active:scale-95">
+            <Icon name="arrow-up-right" className="size-4" />
+          </span>
         </span>
+        <span className="absolute inset-x-3 bottom-3 flex min-h-11 items-center justify-between gap-2 bg-accent px-3.5 text-[14px] font-medium text-surface shadow-[0_10px_24px_-12px] shadow-ink/50 transition-transform duration-200 group-active:scale-[0.98] sm:inset-x-4 sm:bottom-4">
+          Смотреть все фото
+          <Icon
+            name="arrow-right"
+            className="size-4 shrink-0 transition-transform duration-300 group-hover:translate-x-0.5"
+          />
+        </span>
+      </span>
+      <SpecLabel className="mt-4">{item.categoryLabel}</SpecLabel>
+      <span className="mt-2 block font-display text-h3 font-semibold text-ink">
+        {item.title}
       </span>
       <span className="mt-1 line-clamp-2 block text-sm text-muted">
         {item.place}
@@ -187,7 +197,7 @@ export function ApparelSolutions({ index }: { index?: string } = {}) {
           className="mt-12 sm:mt-16"
         />
 
-        <ul className="mt-8 grid grid-cols-2 gap-x-3 gap-y-10 sm:gap-x-4 lg:grid-cols-4 lg:gap-x-6">
+        <ul className="mt-8 grid grid-cols-1 gap-y-8 sm:grid-cols-2 sm:gap-x-4 sm:gap-y-10 lg:grid-cols-4 lg:gap-x-6">
           {filtered.map((item) => (
             <li key={item.id}>
               <WorkCard item={item} onOpen={() => setActiveId(item.id)} />
@@ -225,7 +235,7 @@ export function ApparelSolutions({ index }: { index?: string } = {}) {
                   type="button"
                   onClick={() => setLightboxIndex(i)}
                   aria-label={`Открыть фото ${i + 1}`}
-                  className="group relative block aspect-[3/4] w-full overflow-hidden bg-wash focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+                  className="group relative block aspect-[3/4] w-full cursor-pointer overflow-hidden bg-wash transition-transform duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent active:scale-[0.98]"
                 >
                   <Image
                     src={photoPath(active.folder, file)}
@@ -234,8 +244,15 @@ export function ApparelSolutions({ index }: { index?: string } = {}) {
                     className="object-cover object-[center_18%] transition-transform duration-500 group-hover:scale-[1.03]"
                     sizes="200px"
                   />
+                  <span
+                    aria-hidden
+                    className="absolute inset-0 bg-ink/0 transition-colors duration-300 group-hover:bg-ink/20"
+                  />
                   <span className="absolute top-2 left-2 bg-surface/90 px-1.5 py-0.5 font-mono text-[10px] text-ink">
                     {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <span className="absolute right-2 bottom-2 grid size-8 place-items-center rounded-full bg-surface/90 text-ink opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                    <Icon name="arrow-up-right" className="size-3.5" />
                   </span>
                 </button>
               </li>

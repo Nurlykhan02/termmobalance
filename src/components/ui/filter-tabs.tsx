@@ -34,7 +34,7 @@ export function FilterTabs<T extends string>({
             role="tab"
             aria-selected={active}
             onClick={() => onChange(tab.id)}
-            className={`relative flex min-h-11 min-w-11 items-center gap-2 text-[15px] font-medium transition-colors after:absolute after:inset-x-0 after:-bottom-[17px] after:h-0.5 after:transition-colors ${
+            className={`relative flex min-h-11 min-w-11 cursor-pointer items-center gap-2 text-[15px] font-medium transition-[color,transform] duration-200 after:absolute after:inset-x-0 after:-bottom-[17px] after:h-0.5 after:transition-colors active:scale-[0.97] ${
               active
                 ? "text-ink after:bg-accent"
                 : "text-muted after:bg-transparent hover:text-ink"

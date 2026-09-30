@@ -9,24 +9,23 @@ export function StudioHero() {
 
   return (
     <section className="relative isolate flex min-h-[100svh] flex-col justify-end overflow-hidden bg-background text-[#ede6da]">
-      <div className="hero-settle absolute inset-0 -z-10">
+      <div className="hero-settle absolute inset-x-0 top-16 bottom-0 -z-10 overflow-hidden md:left-[28%]">
         <Image
           src={asset(shot.src)}
           alt={shot.alt}
           fill
           preload
-          sizes="100vw"
-          className="object-cover"
-          style={{ objectPosition: shot.focus }}
+          sizes="(max-width: 768px) 100vw, 75vw"
+          className="object-cover object-[58%_top] md:object-top"
         />
       </div>
       <div
         aria-hidden
-        className="absolute inset-0 -z-10 bg-gradient-to-t from-black/90 via-black/30 to-black/45"
+        className="absolute inset-0 -z-10 bg-gradient-to-t from-black/90 via-black/35 to-black/50"
       />
       <div
         aria-hidden
-        className="absolute inset-y-0 left-0 -z-10 w-full bg-gradient-to-r from-black/60 via-black/20 to-transparent lg:w-2/3"
+        className="absolute inset-y-0 left-0 -z-10 w-full bg-gradient-to-r from-black/80 via-black/40 to-transparent md:w-[55%]"
       />
 
       <div className="container-x pt-28 pb-6 sm:pb-8">

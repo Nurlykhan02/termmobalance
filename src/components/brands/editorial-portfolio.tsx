@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useCallback, useMemo, useState } from "react";
 import { FilterTabs, type FilterTab } from "@/components/ui/filter-tabs";
+import { Icon } from "@/components/ui/icon";
 import { Lightbox, type LightboxItem } from "@/components/ui/lightbox";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { SpecLabel } from "@/components/ui/spec-label";
@@ -87,7 +88,7 @@ export function EditorialPortfolio({
                   type="button"
                   onClick={() => setOpen(position)}
                   aria-label={`Открыть кадр ${shot.n}: ${shot.alt}`}
-                  className="group block w-full text-left focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
+                  className="group block w-full cursor-pointer text-left transition-transform duration-200 ease-out-soft focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent active:scale-[0.985]"
                 >
                   <span className="relative block aspect-[4/5] overflow-hidden bg-raised">
                     <Image
@@ -102,6 +103,13 @@ export function EditorialPortfolio({
                       className="object-cover transition-transform duration-700 ease-out-soft group-hover:scale-[1.04]"
                       style={{ objectPosition: shot.focus }}
                     />
+                    <span
+                      aria-hidden
+                      className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-100 sm:opacity-0 sm:transition-opacity sm:duration-500 sm:group-hover:opacity-100"
+                    />
+                    <span className="absolute right-2.5 bottom-2.5 grid size-9 place-items-center rounded-full bg-accent text-[#0e0d0c] shadow-[0_8px_20px_-10px] shadow-black/60 transition-transform duration-300 group-hover:rotate-45 sm:right-3 sm:bottom-3 sm:size-10">
+                      <Icon name="arrow-up-right" className="size-4" />
+                    </span>
                   </span>
                   <span className="mt-2 flex items-baseline justify-between gap-3">
                     <SpecLabel>

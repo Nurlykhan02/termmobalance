@@ -122,8 +122,8 @@ export function SiteHeader({
     ? "text-white/75 hover:text-white"
     : "text-ink/70 hover:text-ink";
   const ctaClass = light
-    ? "bg-[#f4f0ea] text-[#0e0d0c] hover:bg-white"
-    : "bg-ink text-surface hover:bg-ink/85";
+    ? "cursor-pointer bg-[#f4f0ea] text-[#0e0d0c] shadow-[0_1px_0_rgb(0_0_0/0.06)] transition-[color,background-color,transform,box-shadow] duration-200 hover:bg-white hover:shadow-[0_10px_28px_-14px] hover:shadow-black/45 active:scale-[0.97] active:bg-[#e8e2d8]"
+    : "cursor-pointer bg-ink text-surface shadow-[0_1px_0_rgb(0_0_0/0.08)] transition-[color,background-color,transform,box-shadow] duration-200 hover:bg-ink/88 hover:shadow-[0_10px_28px_-14px] hover:shadow-ink/50 active:scale-[0.97]";
 
   return (
     <header
@@ -171,7 +171,7 @@ export function SiteHeader({
             aria-label={menuOpen ? "Закрыть меню" : "Открыть меню"}
             aria-expanded={menuOpen}
             onClick={() => setMenuOpen((open) => !open)}
-            className="flex size-11 items-center justify-center lg:hidden"
+            className="flex size-11 cursor-pointer items-center justify-center transition-transform duration-200 active:scale-95 lg:hidden"
           >
             <Icon name={menuOpen ? "close" : "plus"} className="size-6" />
           </button>
@@ -196,7 +196,7 @@ export function SiteHeader({
           <NavItem
             href={cta.href}
             onClick={() => setMenuOpen(false)}
-            className="mt-6 inline-flex h-12 w-full items-center justify-center gap-2 rounded-[var(--radius)] bg-ink text-[14px] font-medium text-surface"
+            className={`mt-6 inline-flex h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-[var(--radius)] bg-ink text-[14px] font-medium text-surface transition-[background-color,transform] duration-200 hover:bg-ink/88 active:scale-[0.97]`}
           >
             {cta.label}
             <Icon name="arrow-up-right" className="size-4" />
@@ -205,7 +205,7 @@ export function SiteHeader({
             <NavItem
               href={whatsappHref}
               onClick={() => setMenuOpen(false)}
-              className="mt-3 inline-flex h-12 w-full items-center justify-center rounded-[var(--radius)] border border-line text-[14px] font-medium text-ink"
+              className="mt-3 inline-flex h-12 w-full cursor-pointer items-center justify-center rounded-[var(--radius)] border border-line text-[14px] font-medium text-ink transition-[background-color,transform] duration-200 hover:bg-ink/5 active:scale-[0.97]"
             >
               WhatsApp
             </NavItem>
