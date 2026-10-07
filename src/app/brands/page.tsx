@@ -7,6 +7,7 @@ import { FactoryFashionCompare } from "@/components/brands/factory-fashion-compa
 import { ProcessSteps } from "@/components/brands/process-steps";
 import { StudioBrief } from "@/components/brands/studio-brief";
 import { StudioHero } from "@/components/brands/studio-hero";
+import { TeeConstructor } from "@/components/brands/tee-constructor";
 import { Techniques } from "@/components/brands/techniques";
 import { BrandsClients } from "@/components/brands-proof";
 import { SiteFooter } from "@/components/site-footer";
@@ -26,6 +27,7 @@ export const metadata: Metadata = {
 
 const NAV = [
   { label: "Что шьём", href: "#categories" },
+  { label: "Конструктор", href: "#constructor" },
   { label: "Работы", href: "#work" },
   { label: "Производство", href: "#production" },
   { label: "Контакты", href: "#contact" },
@@ -46,11 +48,12 @@ export default function BrandsPage() {
       <Categories index="02" />
       <Capabilities index="03" />
       <Techniques index="04" />
-      <ProcessSteps index="05" />
-      <EditorialPortfolio index="06" shots={publicShots()} />
-      <FactoryFashionCompare index="07" pairs={COMPARE_PAIRS} />
-      <BrandsClients index="08" testimonials={TESTIMONIALS} />
-      <StudioBrief index="09" />
+      <TeeConstructor index="05" />
+      <ProcessSteps index="06" />
+      <EditorialPortfolio index="07" shots={publicShots()} />
+      <FactoryFashionCompare index="08" pairs={COMPARE_PAIRS} />
+      <BrandsClients index="09" testimonials={TESTIMONIALS} />
+      <StudioBrief index="10" />
       <SiteFooter
         tone="light"
         links={[

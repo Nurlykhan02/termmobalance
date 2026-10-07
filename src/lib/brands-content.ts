@@ -220,18 +220,18 @@ export const TECHNIQUES: { main: Technique[]; extra: string[] } = {
       label: "Вышивка",
       text: "Вышивка логотипа и надписей на ткани.",
       photo: {
-        src: "/images/apparel/zhilety/variant-1/02.jpg",
-        alt: "Нанесение логотипа на жилет",
-        focus: "center 40%",
+        src: "/images/photos-brands/IMG_1571.jpg",
+        alt: "Тональная вышивка OUTRO на спине худи",
+        focus: "center 55%",
       },
     },
     {
       label: "Шевроны",
       text: "Шевроны и нашивки под бренд.",
       photo: {
-        src: "/images/apparel/kurtki/variant-1/05.jpg",
-        alt: "Шеврон на рукаве куртки",
-        focus: "center 40%",
+        src: "/images/photos-brands/IMG_1863.jpg",
+        alt: "Нашивка 2EASY на рукаве худи",
+        focus: "center 48%",
       },
     },
     {
@@ -267,13 +267,22 @@ export const CATEGORIES: Category[] = [
     specs: "Кулирка 180–240 г/м² · regular и oversize",
   },
   {
-    label: "Худи и свитшоты",
+    label: "Худи",
     photo: {
-      src: "/images/photos-brands/brand_16.jpg",
-      alt: "Оверсайз силуэт с принтом на спине",
-      focus: "center 30%",
+      src: "/images/photos-brands/IMG_2023.jpg",
+      alt: "Бежевое оверсайз худи с логотипом на груди",
+      focus: "center 32%",
     },
     specs: "Футер 280–380 г/м² · начёс · oversize",
+  },
+  {
+    label: "Свитшоты",
+    photo: {
+      src: "/images/photos-brands/IMG_1476.jpg",
+      alt: "Бежевый оверсайз свитшот без капюшона",
+      focus: "center 30%",
+    },
+    specs: "Футер · оверсайз · без капюшона",
   },
   {
     label: "Комплекты",
@@ -285,31 +294,22 @@ export const CATEGORIES: Category[] = [
     specs: "Футболка + легинсы или джоггеры · в цвет",
   },
   {
-    label: "Флис и софтшелл",
+    label: "Флис",
     photo: {
-      src: "/images/apparel/zhilety/variant-1/01.jpg",
-      alt: "Флисовая куртка цвета хаки с логотипом",
-      focus: "center 30%",
+      src: "/images/photos-brands/IMG_1804.jpg",
+      alt: "Синий оверсайз флис с V-вырезом",
+      focus: "center 28%",
     },
-    specs: "Флис 280 г/м² · софтшелл · вышивка логотипа",
+    specs: "Флис · оверсайз · V-вырез",
   },
   {
-    label: "Утеплённые куртки",
+    label: "Худи на молнии",
     photo: {
-      src: "/images/apparel/kurtki/variant-1/03.jpg",
-      alt: "Утеплённая куртка со светоотражающими полосами",
+      src: "/images/photos-brands/IMG_1519.jpg",
+      alt: "Удлинённое синее худи на молнии",
       focus: "center 30%",
     },
-    specs: "Мембрана и оксфорд · утеплитель Teksulate 100–300 г/м²",
-  },
-  {
-    label: "Форма для команды",
-    photo: {
-      src: "/images/apparel/kurtki/variant-2/01.jpg",
-      alt: "Рабочий костюм в фирменных цветах",
-      focus: "center 30%",
-    },
-    specs: "Смесовые ткани · фирменные цвета · шевроны",
+    specs: "Футер · молния · удлинённый крой",
   },
 ];
 
@@ -394,6 +394,51 @@ export const TESTIMONIALS: Testimonial[] = [
 export const BRIEF = {
   products: [...CATEGORIES.map((item) => item.label), "Другое"],
   techniques: [...TECHNIQUES.main.map((item) => item.label), "Пока не знаю"],
+};
+
+/* ---------- Constructor ---------- */
+
+/** Print zone as fractions of the photo: centre, width, and height-to-width ratio. */
+export type ConstructorPlacement = {
+  id: string;
+  label: string;
+  cx: number;
+  cy: number;
+  w: number;
+  ratio: number;
+};
+
+export const CONSTRUCTOR = {
+  /** Generated studio shot; the mask is the tee only, built by .qa/tee_mask.py. */
+  photo: "/images/constructor/tee-model.jpg",
+  mask: "/images/constructor/tee-mask.png",
+  garments: [
+    { label: "Белый", hex: "#f4f3ef" },
+    { label: "Молочный", hex: "#e9e1d0" },
+    { label: "Серый меланж", hex: "#a9aaac" },
+    { label: "Графит", hex: "#3a3c40" },
+    { label: "Чёрный", hex: "#1b1b1d" },
+    { label: "Бежевый", hex: "#cdb796" },
+    { label: "Хаки", hex: "#6e6a4b" },
+    { label: "Оливковый", hex: "#4b5638" },
+    { label: "Тёмно-синий", hex: "#1f2a44" },
+    { label: "Серо-голубой", hex: "#9fb3c6" },
+    { label: "Лиловый", hex: "#b7a2cf" },
+    { label: "Бордо", hex: "#6b1f2b" },
+    { label: "Красный", hex: "#b8322a" },
+  ],
+  inks: [
+    { label: "Белый", hex: "#f4f3ef" },
+    { label: "Чёрный", hex: "#16161a" },
+    { label: "Золото", hex: "#c9a45c" },
+    { label: "Красный", hex: "#c0392b" },
+    { label: "Тёмно-синий", hex: "#1f2a44" },
+  ],
+  placements: [
+    { id: "chest", label: "Грудь по центру", cx: 0.5, cy: 0.41, w: 0.22, ratio: 0.7 },
+    { id: "left", label: "Левая грудь", cx: 0.59, cy: 0.375, w: 0.09, ratio: 0.8 },
+    { id: "big", label: "Крупный принт", cx: 0.5, cy: 0.5, w: 0.32, ratio: 0.9 },
+  ] satisfies ConstructorPlacement[],
 };
 
 /* ---------- Footer ---------- */

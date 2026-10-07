@@ -20,15 +20,13 @@ const WA_CONSULT =
 const CATEGORIES = [
   { id: "teksulate", label: "Teksulate" },
   { id: "unifiber", label: "UniFiber" },
-  { id: "quilt", label: "Стёжка" },
 ] as const;
 
 type CategoryId = (typeof CATEGORIES)[number]["id"];
 
 const BRAND_IMAGES: Record<CategoryId, string> = {
-  teksulate: asset("/images/products/teksulate-p.png"),
-  unifiber: asset("/images/products/unifiber.jpg"),
-  quilt: asset("/images/products/quilt.jpg"),
+  teksulate: asset("/images/products/teksulate-p.jpeg"),
+  unifiber: asset("/images/products/uni-grade-x.jpeg"),
 };
 
 interface CatalogLine {
@@ -51,7 +49,7 @@ const lines: CatalogLine[] = [
     use: "Подкладка для зимней экипировки и спецодежды",
     material:
       "Смесь полиэфирных волокон от 1,5 Den и легкоплавкого П/Э волокна. Производим на своём заводе в Шымкенте.",
-    image: asset("/images/products/teksulate-p.png"),
+    image: asset("/images/products/teksulate-p.jpeg"),
     highlights: [
       "Базовая линейка для зимней спецодежды",
       "Своё производство в Шымкенте",
@@ -66,7 +64,7 @@ const lines: CatalogLine[] = [
     use: "Более тонкая подкладка на базе линейки P",
     material:
       "Полиэфирные микроволокна от 1,5 Den + легкоплавкое П/Э. Легче и мягче базовой марки P.",
-    image: asset("/images/products/teksulate-lp.png"),
+    image: asset("/images/products/teksulate-lp.jpeg"),
     highlights: [
       "Легче и мягче Teksulate-P",
       "Для изделий, где важен тонкий слой",
@@ -81,7 +79,7 @@ const lines: CatalogLine[] = [
     use: "Огнестойкая подкладка для зимней экипировки",
     material:
       "ПЭ + микроволокно + легкоплавкое П/Э с огнестойкими волокнами. Для задач с повышенными требованиями безопасности.",
-    image: asset("/images/products/teksulate-ft.png"),
+    image: asset("/images/products/teksulate-ft.jpeg"),
     highlights: [
       "Огнестойкие волокна в составе",
       "Для спецэкипировки и повышенных требований",
@@ -96,6 +94,7 @@ const lines: CatalogLine[] = [
     use: "Подкладка для зимней экипировки",
     material:
       "Тонкое 100% полиэфирное волокно и легкоплавкое П/Э. Своё производство нетканых материалов в Казахстане.",
+    image: asset("/images/products/uni-grade-x.jpeg"),
     highlights: [
       "100% полиэфирная основа",
       "Для зимней экипировки и формы",
@@ -110,6 +109,7 @@ const lines: CatalogLine[] = [
     use: "Подкладка с добавлением шерсти",
     material:
       "Тонкое полиэфирное волокно + легкоплавкое П/Э + шерсть. Теплее и мягче на ощупь.",
+    image: asset("/images/products/uni-Alfatex-SH.jpeg"),
     highlights: [
       "Добавление шерсти в состав",
       "Теплее и мягче на ощупь",
@@ -124,6 +124,7 @@ const lines: CatalogLine[] = [
     use: "Подкладка из полого высокоизвитого волокна",
     material:
       "100% ПЭ волокно «Канжугейт» кольцеобразного сечения. Держит объём и тепло при пошиве.",
+    image: asset("/images/products/uni-type-3.jpeg"),
     highlights: [
       "Полое высокоизвитое волокно",
       "Держит объём при пошиве",
@@ -138,24 +139,11 @@ const lines: CatalogLine[] = [
     use: "Огнестойкая подкладка UniFiber",
     material:
       "ПЭ микроволокно + легкоплавкое П/Э + огнестойкие волокна. Для форменной и спецэкипировки.",
+    image: asset("/images/products/uni-fg-firewalls.jpeg"),
     highlights: [
       "Огнестойкая формула UniFiber",
       "Для формы и спецэкипировки",
       "Повышенные требования к безопасности",
-    ],
-  },
-  {
-    id: "quilt",
-    brand: "quilt",
-    brandLabel: "Стёжка",
-    name: "Стёганый утеплитель",
-    use: "Стёжка утеплителя с тканью или спанбондом",
-    material:
-      "Стёжка на своём оборудовании: ромб, квадрат, волна и рисунки под задачу. Утеплитель не сбивается и держит форму.",
-    highlights: [
-      "Стёжка на своём оборудовании",
-      "Ромб, квадрат, волна и рисунки под задачу",
-      "Утеплитель не сбивается и держит форму",
     ],
   },
 ];

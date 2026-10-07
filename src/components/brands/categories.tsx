@@ -23,8 +23,8 @@ export function Categories({ index }: { index: string }) {
         <SectionHeading
           index={index}
           eyebrow="Что шьём"
-          title="Трикотаж и верхняя одежда под ваш бренд"
-          lead="От базовой футболки до утеплённой куртки — на своих линиях, с вашим логотипом. Нажмите на изделие, и в WhatsApp откроется готовый запрос."
+          title="Трикотаж под ваш бренд"
+          lead="Футболки, худи, свитшоты и флис — на своих линиях, с вашим логотипом. Нажмите на изделие, и в WhatsApp откроется готовый запрос."
         />
 
         <ul className="mt-12 grid grid-cols-2 gap-3 sm:mt-20 sm:gap-4 lg:grid-cols-3 lg:gap-5">
